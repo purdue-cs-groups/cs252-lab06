@@ -41,17 +41,30 @@ public class DirectoryServerConnection implements Runnable
                     addIP = br.readLine();
                     addIP = addIP.substring(11, addIP.length() - 12);
                     
-                    User u = new User(userName, addIP);
-                    _host._directory.add(u);
-                    
                     System.out.println("\nAddUser Request");
                     System.out.println("---------------");
                     System.out.println("New user:   " + userName);
                     System.out.println("IP Address: " + addIP);
+                    
+                    User u = new User(userName, addIP);
+                    _host._directory.add(u);
                 }
                 // GetDirectory request
-                else if (line.startsWith("<GetDirectory>")) {
+                else if (line.startsWith("<GetDirectory>"))
+                {
                     System.out.println("\nGetDirectory Request");
+                    
+                    PrintWriter out = new PrintWriter(_clientSocket.getOutputStream(), true);
+                    
+                    out.println("<DirectoryListing>");
+                    for (User u : _host._directory)
+                    {
+                        out.println("<User>");
+                        out.println("<Username>" + u.getUsername() + "</Username>");
+                        out.println("<IPAddress>" + u.getIPAddress() + "</IPAddress>");
+                        out.println("</User>");
+                    }
+                    out.println("</DirectoryListing>");
                 }    
                 // SendCall request
                 else if (line.startsWith("<SendCall>")) {
