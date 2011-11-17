@@ -41,7 +41,7 @@ public class DirectoryServerConnection implements Runnable
                     addIP = br.readLine();
                     addIP = addIP.substring(11, addIP.length() - 12);
                     
-                    User u = new User(username, addIP);
+                    User u = new User(userName, addIP);
                     _host._directory.add(u);
                     
                     System.out.println("\nAddUser Request");
