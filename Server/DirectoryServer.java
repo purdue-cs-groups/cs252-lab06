@@ -12,7 +12,7 @@ public class DirectoryServer implements Runnable
     
     public void run()
     {
-        System.out.println("Server started.");
+        System.out.println("Directory Server started.");
         
         try
         {
