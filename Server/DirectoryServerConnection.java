@@ -23,13 +23,14 @@ public class DirectoryServerConnection implements Runnable
             InputStream is = _clientSocket.getInputStream();
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
-            // read each line
+            // request data
             String line;
             String userName, addIP;
             String sendIP;
             String acceptIP;
             String hangupIP;            
             
+			// read each line
             while ((line = br.readLine()) != null)
             {
                 // AddUser request
