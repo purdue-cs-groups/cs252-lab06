@@ -1,7 +1,7 @@
 all: DirectoryServer Server
 
 DirectoryServer:
-	javac DirectoryServerConnection.java DirectoryServer.java
+	javac User.java DirectoryServerConnection.java DirectoryServer.java
 
 Server:
 	javac Server.java

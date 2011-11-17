@@ -1,13 +1,17 @@
+import java.util.*; 
 import java.io.*; 
-import java.net.*; 
+import java.net.*;
 
 public class DirectoryServer implements Runnable
 {
     private int _port = 0;
-    
+   
+    ArrayList<User> _directory = null;
+ 
     DirectoryServer(int port)
     {
         _port = port;
+        _directory = new ArrayList<User>();
     }
     
     public void run()
