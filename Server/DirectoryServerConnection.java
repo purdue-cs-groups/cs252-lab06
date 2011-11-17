@@ -70,7 +70,7 @@ public class DirectoryServerConnection implements Runnable
                     
                     PrintWriter out = new PrintWriter(_clientSocket.getOutputStream(), true);
                     
-                    out.println("<DirectoryListing>");
+                    out.println("<Directory>");
                     for (User u : _host._directory)
                     {
                         out.println("<User>");
@@ -78,7 +78,9 @@ public class DirectoryServerConnection implements Runnable
                         out.println("<IPAddress>" + u.getIPAddress() + "</IPAddress>");
                         out.println("</User>");
                     }
-                    out.println("</DirectoryListing>");
+                    out.println("</Directory>");
+                    
+                    out.close();
                 }    
                 // SendCall request
                 else if (line.startsWith("<SendCall>")) {
