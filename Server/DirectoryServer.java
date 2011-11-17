@@ -12,7 +12,7 @@ import java.net.UnknownHostException;
 
 public class DirectoryServer
 {
-	protected static int SERVER_PORT = 4444;
+    protected static int SERVER_PORT = 4444;
 
     public static void main(String[] args)
     {
@@ -22,47 +22,47 @@ public class DirectoryServer
         Server sv = new Server();
         
         // launch a new thread for this server
-		Thread th = new Thread(sv);        
+        Thread th = new Thread(sv);        
         th.start();
-	}
+    }
 
-	public static class Server implements Runnable
+    public static class Server implements Runnable
     {
-		public void run()
+        public void run()
         {
             System.out.println("Server started.");
             
-			try
+            try
             {
-				// create a socket for handling incoming requests
-				ServerSocket server = new ServerSocket(SERVER_PORT);
+                // create a socket for handling incoming requests
+                ServerSocket server = new ServerSocket(SERVER_PORT);
 
-				while (true)
+                while (true)
                 {
                     System.out.println("Listening for conections...");
                     
-					// wait for an incoming connection
-					Socket clientSocket = server.accept();
-					
+                    // wait for an incoming connection
+                    Socket clientSocket = server.accept();
+                    
                     System.out.println("Connection received.");
                     
                     System.out.println("Launching new thread for connection...");
                     
                     // create a new connection for this socket
-					Connection cn = new Connection();
+                    Connection cn = new Connection();
                     cn.clientSocket = clientSocket;
                     
                     // launch a new thread for this connection
                     Thread th = new Thread(cn);
                     th.start();
-				}
-			}
+                }
+            }
             catch (IOException ex)
             {
-				// TODO: handle this exception
-			}
-		}
-	}
+                // TODO: handle this exception
+            }
+        }
+    }
     
     public static class Connection implements Runnable
     {
