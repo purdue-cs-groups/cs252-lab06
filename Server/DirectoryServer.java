@@ -4,12 +4,12 @@ import java.net.*;
 public class DirectoryServer implements Runnable
 {
     private int _port = 0;
-    
+
     DirectoryServer(int port)
     {
         _port = port;
     }
-    
+
     public void run()
     {
         System.out.println("Directory Server started.");

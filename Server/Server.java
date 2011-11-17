@@ -8,7 +8,7 @@ public class Server
         System.out.println("Starting server...");
         
         // create a new instance of the directory server
-        DirectoryServer ds = new DirectoryServer(6900); 
+        DirectoryServer ds = new DirectoryServer(6000); 
         
         Thread t1 = new Thread(ds);        
         t1.start();
