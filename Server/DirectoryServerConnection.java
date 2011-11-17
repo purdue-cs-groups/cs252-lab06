@@ -1,7 +1,7 @@
 import java.io.*; 
 import java.net.*; 
 
-public class Connection implements Runnable
+public class DirectoryServerConnection implements Runnable
 {
     public Socket clientSocket = null;
     
@@ -19,13 +19,18 @@ public class Connection implements Runnable
             String line;
             while ((line = br.readLine()) != null)
             {
-                System.out.println("RECV: " + line);
+                parseStreamData(line);
             }
         }
         catch (IOException ex)
         {
             // TODO: handle this exception
         }
+    }
+    
+    public void parseStreamData(String line)
+    {
+        System.out.println("RECV: " + line);
     }
 }
 

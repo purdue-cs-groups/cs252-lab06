@@ -31,7 +31,7 @@ public class DirectoryServer implements Runnable
                 System.out.println("Launching new thread for connection...");
                 
                 // create a new connection for this socket
-                Connection cn = new Connection();
+                DirectoryServerConnection cn = new DirectoryServerConnection();
                 cn.clientSocket = clientSocket;
                 
                 // launch a new thread for this connection

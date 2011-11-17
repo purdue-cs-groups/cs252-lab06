@@ -1,7 +1,10 @@
-all: Server
+all: DirectoryServer Server
+
+DirectoryServer:
+	javac DirectoryServerConnection.java DirectoryServer.java
 
 Server:
-	javac Connection.java DirectoryServer.java Server.java
+	javac Server.java
 
 clean:
 	rm -f *.class
