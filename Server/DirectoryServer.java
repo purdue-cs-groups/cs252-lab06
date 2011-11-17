@@ -39,7 +39,7 @@ public class DirectoryServer
 
                 while (true)
                 {
-                    System.out.println("Listening for conections...");
+                    System.out.println("Listening for conections on " + SERVER_PORT + "...");
                     
                     // wait for an incoming connection
                     Socket clientSocket = server.accept();
