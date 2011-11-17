@@ -4,8 +4,7 @@ import java.net.*;
 
 public class DirectoryServer implements Runnable
 {
-    private int _port = 0;
-   
+    private int _port = 0;   
     ArrayList<User> _directory = null;
  
     DirectoryServer(int port)
