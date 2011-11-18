@@ -68,8 +68,6 @@ public class DirectoryServerConnection implements Runnable
                         out.println("</User>");
                     }
                     out.println("</Directory>");
-                    
-                    out.close();
                 }    
                 // SendCall request
                 else if (line.startsWith("<SendCall>")) {
