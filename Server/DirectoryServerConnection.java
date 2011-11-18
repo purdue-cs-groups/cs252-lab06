@@ -23,12 +23,7 @@ public class DirectoryServerConnection implements Runnable
             InputStream is = _clientSocket.getInputStream();
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
-            // request data
             String line;
-            String userName, addIP;
-            String sendIP;
-            String acceptIP;
-            String hangupIP;            
             
             // read each line
             while ((line = br.readLine()) != null)
@@ -36,72 +31,85 @@ public class DirectoryServerConnection implements Runnable
                 // AddUser request
                 if (line.startsWith("<AddUser>"))
                 {
-                    userName = br.readLine();
-                    userName = userName.substring(10, userName.length() - 11);
+                    String username = br.readLine();
+                    username = username.substring(10, username.length() - 11);
 
-                    addIP = br.readLine();
-                    addIP = addIP.substring(11, addIP.length() - 12);
-                    
                     System.out.println("\nAddUser Request");
                     System.out.println("---------------");
-                    System.out.println("New user:   " + userName);
-                    System.out.println("IP Address: " + addIP);
+                    System.out.println("New user:   " + username);
+                    System.out.println("IP Address: " + _clientSocket.getInetAddress().getHostAddress());
                     
-                    User u = new User(userName, addIP);
-                    _host._directory.add(u);
-
-                    _host.sendUpdatedDirectory();
+                    addUser(username);
                 }
                 // GetDirectory request
                 else if (line.startsWith("<GetDirectory>"))
                 {
                     System.out.println("\nGetDirectory Request");
                     
-                    PrintWriter out = new PrintWriter(_clientSocket.getOutputStream(), true);
-                    
-                    out.println("<Directory>");
-                    for (User u : _host._directory)
-                    {
-                        out.println("<User>");
-                        out.println("<Username>" + u.getUsername() + "</Username>");
-                        out.println("<IPAddress>" + u.getIPAddress() + "</IPAddress>");
-                        out.println("</User>");
-                    }
-                    out.println("</Directory>");
+                    getDirectory();
                 }    
                 // SendCall request
-                else if (line.startsWith("<SendCall>")) {
-                    sendIP = br.readLine();
+                else if (line.startsWith("<SendCall>"))
+                {
+                    String sendIP = br.readLine();
                     sendIP = sendIP.substring(11, sendIP.length() - 12);
                     System.out.println("\nSendCall Request");
                     System.out.println("----------------");
                     System.out.println("IP Address: " + sendIP);
                 }
                 // AcceptCall request
-                else if (line.startsWith("<AcceptCall>")) {
-                    acceptIP = br.readLine();
+                else if (line.startsWith("<AcceptCall>"))
+                {
+                    String acceptIP = br.readLine();
                     acceptIP = acceptIP.substring(11, acceptIP.length() - 12);
                     System.out.println("\nAcceptCall Request");
                     System.out.println("------------------");
                     System.out.println("IP Address: " + acceptIP);
                 }
                 // Hangup request
-                else if (line.startsWith("<Hangup>")) {
-                    hangupIP = br.readLine();
+                else if (line.startsWith("<Hangup>"))
+                {
+                    String hangupIP = br.readLine();
                     hangupIP = hangupIP.substring(11, hangupIP.length() - 12);
                     System.out.println("\nHangup Request");
                     System.out.println("--------------");
                     System.out.println("IP Address: " + hangupIP);
-                }
-                // Something else
-                else {
-                    // ignore
                 }
             }
         }
         catch (IOException ex)
         {
             // TODO: handle this exception
+        }
+    }
+    
+    public void addUser(String username)
+    {
+        User u = new User(username, _clientSocket.getInetAddress().getHostAddress());
+        _host._directory.add(u);
+
+        _host.sendUpdatedDirectory();
+    }
+    
+    public void getDirectory()
+    {
+        try
+        {
+            PrintWriter out = new PrintWriter(_clientSocket.getOutputStream(), true);
+                        
+            out.println("<Directory>");
+            for (User u : _host._directory)
+            {
+                out.println("<User>");
+                out.println("<Username>" + u.getUsername() + "</Username>");
+                out.println("<IPAddress>" + u.getIPAddress() + "</IPAddress>");
+                out.println("</User>");
+            }
+            out.println("</Directory>");
+        }
+        catch (IOException ex)
+        {
+            // handle this exception
         }
     }
 }
