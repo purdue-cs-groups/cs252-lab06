@@ -30,7 +30,7 @@ public class DirectoryServerConnection implements Runnable
             String acceptIP;
             String hangupIP;            
             
-			// read each line
+            // read each line
             while ((line = br.readLine()) != null)
             {
                 // AddUser request
@@ -50,21 +50,7 @@ public class DirectoryServerConnection implements Runnable
                     User u = new User(userName, addIP);
                     _host._directory.add(u);
 
-                    // when user adds themself, they should also receive
-                    // existing directory (+ themself)
-                    PrintWriter out = new PrintWriter(_clientSocket.getOutputStream(), true);
-                    
-                    out.println("<Directory>");
-                    for (User o : _host._directory)
-                    {
-                        out.println("<User>");
-                        out.println("<Username>" + o.getUsername() + "</Username>");
-                        out.println("<IPAddress>" + o.getIPAddress() + "</IPAddress>");
-                        out.println("</User>");
-                    }
-                    out.println("</Directory>");
-                    
-                    out.close();
+                    _host.sendUpdatedDirectory();
                 }
                 // GetDirectory request
                 else if (line.startsWith("<GetDirectory>"))
