@@ -50,11 +50,11 @@ public class DirectoryServerConnection implements Runnable
                     User u = new User(userName, addIP);
                     _host._directory.add(u);
 
-					// when user adds themself, they should also receive
-					// existing directory (+ themself)
-					PrintWriter out = new PrintWriter(_clientSocket.getOutputStream(), true);
+                    // when user adds themself, they should also receive
+                    // existing directory (+ themself)
+                    PrintWriter out = new PrintWriter(_clientSocket.getOutputStream(), true);
                     
-                    out.println("<DirectoryListing>");
+                    out.println("<Directory>");
                     for (User o : _host._directory)
                     {
                         out.println("<User>");
@@ -62,7 +62,9 @@ public class DirectoryServerConnection implements Runnable
                         out.println("<IPAddress>" + o.getIPAddress() + "</IPAddress>");
                         out.println("</User>");
                     }
-                    out.println("</DirectoryListing>");
+                    out.println("</Directory>");
+                    
+                    out.close();
                 }
                 // GetDirectory request
                 else if (line.startsWith("<GetDirectory>"))
