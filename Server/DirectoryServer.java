@@ -67,8 +67,6 @@ public class DirectoryServer implements Runnable
                     out.println("</User>");
                 }
                 out.println("</Directory>");
-                
-                out.close();
             }
         }
         catch (IOException ex)
