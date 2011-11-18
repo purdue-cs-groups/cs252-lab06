@@ -5,9 +5,9 @@ import java.net.*;
 public class DirectoryServer implements Runnable
 {
     private int _port = 0;
-    Map<String, DirectoryServerConnection> _connections = null;
     ArrayList<User> _directory = null;
- 
+    Map<String, DirectoryServerConnection> _connections = null;
+    
     DirectoryServer(int port)
     {
         _port = port;
