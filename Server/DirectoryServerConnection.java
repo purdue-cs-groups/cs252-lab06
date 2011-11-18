@@ -109,7 +109,7 @@ public class DirectoryServerConnection implements Runnable
         }
         catch (IOException ex)
         {
-            // handle this exception
+            // TODO: handle this exception
         }
     }
 }
