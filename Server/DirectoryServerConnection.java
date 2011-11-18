@@ -103,6 +103,7 @@ public class DirectoryServerConnection implements Runnable
                 out.println("<User>");
                 out.println("<Username>" + u.getUsername() + "</Username>");
                 out.println("<IPAddress>" + u.getIPAddress() + "</IPAddress>");
+                out.println("<Status>" + u.getStatus() + "</Status>");
                 out.println("</User>");
             }
             out.println("</Directory>");
