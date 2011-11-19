@@ -9,26 +9,22 @@ public class Server
         System.out.println("Starting server...");
         
         // create a new instance of the directory server
-        DirectoryServer ds = new DirectoryServer(6000); 
-		ConnectionChecker cs = new ConnectionChecker(ds);
-        
-        Thread t1 = new Thread(ds);        
+        DirectoryServer ds = new DirectoryServer(6900); 
+		
+		Thread t1 = new Thread(ds);        
         t1.start();
 
-		Thread connectionChecker = new Thread(cs);
+        // create a new instance of the heartbeat monitor
+		ConnectionChecker cs = new ConnectionChecker(ds);
+        
+        Thread connectionChecker = new Thread(cs);
 		connectionChecker.start();
         
-        // create a new instance of the ringer server
-        // TODO: RingerServer rs = new RingerServer(6901);    
-        
-        // TODO: Thread t2 = new Thread(rs);        
-        // TODO: t2.start();
-        
         // create a new instance of the voice server
-        // TODO: VoiceServer vs = new VoiceServer(6902);
+        VoiceServer vs = new VoiceServer(6901);
         
-        // TODO: Thread t3 = new Thread(vs);        
-        // TODO: t3.start();
+        Thread t2 = new Thread(vs);        
+        t2.start();
     }
 }
 
