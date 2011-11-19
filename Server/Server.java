@@ -10,9 +10,13 @@ public class Server
         
         // create a new instance of the directory server
         DirectoryServer ds = new DirectoryServer(6000); 
+		ConnectionChecker cs = new ConnectionChecker(ds);
         
         Thread t1 = new Thread(ds);        
         t1.start();
+
+		Thread connectionChecker = new Thread(cs);
+		connectionChecker.start();
         
         // create a new instance of the ringer server
         // TODO: RingerServer rs = new RingerServer(6901);    

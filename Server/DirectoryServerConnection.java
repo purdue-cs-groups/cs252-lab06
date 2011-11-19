@@ -75,6 +75,15 @@ public class DirectoryServerConnection implements Runnable
                     System.out.println("--------------");
                     System.out.println("IP Address: " + hangupIP);
                 }
+				// KeepAlive request
+				else if (line.startsWith("<KeepAlive>")) 
+				{
+					_host._keepAliveTimes.put(_clientSocket.getInetAddress().getHostAddress(), Calendar.getInstance().getTimeInMillis());
+	
+					System.out.println("\nKeepAlive Request");
+					System.out.println("-----------------");
+					System.out.println("Timestamp for " + _clientSocket.getInetAddress().getHostAddress() + ": " + _host._keepAliveTimes.get(_clientSocket.getInetAddress().getHostAddress()));
+				}
             }
         }
         catch (IOException ex)
