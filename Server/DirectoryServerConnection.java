@@ -5,12 +5,14 @@ import java.net.*;
 public class DirectoryServerConnection implements Runnable
 {
     private DirectoryServer _host = null; 
-    private Socket _clientSocket = null;
+    Socket _clientSocket = null;
+    Long _lastKeepAliveTime = new Long(0);
     
     DirectoryServerConnection(DirectoryServer host, Socket clientSocket)
     {
         _host = host;
         _clientSocket = clientSocket; 
+        _lastKeepAliveTime = Calendar.getInstance().getTimeInMillis();
     } 
 
     public void run()
@@ -78,11 +80,11 @@ public class DirectoryServerConnection implements Runnable
 				// KeepAlive request
 				else if (line.startsWith("<KeepAlive>")) 
 				{
-					_host._keepAliveTimes.put(_clientSocket.getInetAddress().getHostAddress(), Calendar.getInstance().getTimeInMillis());
+					_lastKeepAliveTime = Calendar.getInstance().getTimeInMillis();
 	
 					System.out.println("\nKeepAlive Request");
 					System.out.println("-----------------");
-					System.out.println("Timestamp for " + _clientSocket.getInetAddress().getHostAddress() + ": " + _host._keepAliveTimes.get(_clientSocket.getInetAddress().getHostAddress()));
+					System.out.println("Timestamp for " + _clientSocket.getInetAddress().getHostAddress() + ": " + _lastKeepAliveTime);
 				}
             }
         }

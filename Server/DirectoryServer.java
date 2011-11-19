@@ -7,14 +7,12 @@ public class DirectoryServer implements Runnable
     private int _port = 0;
     ArrayList<User> _directory = null;
     Map<String, DirectoryServerConnection> _connections = null;
-	Map<String, Long> _keepAliveTimes = null;
     
     DirectoryServer(int port)
     {
         _port = port;
         _directory = new ArrayList<User>();
         _connections = new HashMap<String, DirectoryServerConnection>();
-		_keepAliveTimes = new HashMap<String, Long>();
     }
 
     public void run()
