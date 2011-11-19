@@ -17,7 +17,8 @@ public class ConnectionChecker implements Runnable
     {
         System.out.println("ConnectionChecker is in action...");
 
-        while (true) {
+        while (true)
+        {
             System.out.println("Checking for stale threads...");
             Long currTime = Calendar.getInstance().getTimeInMillis();
             Long timeDiff = new Long(0);
