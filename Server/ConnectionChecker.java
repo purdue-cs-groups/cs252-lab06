@@ -6,7 +6,7 @@ public class ConnectionChecker implements Runnable
 {
     private DirectoryServer _ds = null;
     private int _sleepTime = 5000; // how often to check in ms
-    private int _checkTime = 5000; // whatever is considered old in ms
+    private int _checkTime = 15000; // whatever is considered old in ms
 
     ConnectionChecker (DirectoryServer ds)
     {
