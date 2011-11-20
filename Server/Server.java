@@ -20,10 +20,10 @@ public class Server
             if (args[0] == "--disable-keep-alive")
             {
                 ConnectionChecker cs = new ConnectionChecker(ds);
-            }
             
-            Thread connectionChecker = new Thread(cs);
-            connectionChecker.start();
+                Thread connectionChecker = new Thread(cs);
+                connectionChecker.start();
+            }
         }
                 
         // create a new instance of the voice server
