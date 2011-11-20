@@ -43,7 +43,7 @@ public class DirectoryClient {
 	 * @return true if the user is added
 	 * @return false if otherwise or if socket is not initialized
 	 */
-	public boolean addUserToServer() {
+	public boolean addUserToServer(String username) {
 		// if the connection to the server is not opened, return false;
 		if (socket == null) return false; 
 		OutputStream os = null;
@@ -54,7 +54,7 @@ public class DirectoryClient {
 			bw = new BufferedWriter(new OutputStreamWriter(os));
 			bw.write("<AddUser>");
 			bw.newLine();
-			bw.write("<Username>" + "User" + "</Username>");
+			bw.write("<Username>" + username + "</Username>");
 			bw.newLine();
 			bw.write("</AddUser>");
 		} catch (Exception e) {
