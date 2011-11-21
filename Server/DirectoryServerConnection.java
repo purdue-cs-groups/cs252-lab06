@@ -39,7 +39,7 @@ public class DirectoryServerConnection implements Runnable
                     System.out.println("\nAddUser Request");
                     System.out.println("---------------");
                     System.out.println("New user:   " + username);
-                    System.out.println("IP Address: " + _clientSocket.getInetAddress().getHostAddress());
+                    System.out.println("IP Address: " + _clientSocket.getRemoteSocketAddress().toString().replace('/', ''));
                     
                     addUser(username);
                 }
@@ -84,7 +84,7 @@ public class DirectoryServerConnection implements Runnable
                     
                     System.out.println("\nKeepAlive Request");
                     System.out.println("-----------------");
-                    System.out.println("Timestamp for " + _clientSocket.getInetAddress().getHostAddress() + ": " + _lastKeepAliveTime);
+                    System.out.println("Timestamp for " + _clientSocket.getRemoteSocketAddress().toString().replace('/', '') + ": " + _lastKeepAliveTime);
                 }
             }
         }
@@ -96,7 +96,7 @@ public class DirectoryServerConnection implements Runnable
     
     public void addUser(String username)
     {
-        User u = new User(username, _clientSocket.getInetAddress().getHostAddress());
+        User u = new User(username, _clientSocket.getRemoteSocketAddress().toString().replace('/', ''));
         _host._directory.add(u);
 
         _host.sendUpdatedDirectory();
