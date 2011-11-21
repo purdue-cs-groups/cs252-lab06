@@ -15,7 +15,8 @@ public class Server
         t1.start();
 
         // create a new instance of the heartbeat monitor
-        if (args[0] != "--disable-keep-alive")
+        if ((args.length > 0 && args[0] != "--disable-keep-alive") ||
+            (args.length == 0))
         {
             ConnectionChecker cs = new ConnectionChecker(ds);
             
