@@ -68,26 +68,87 @@ public class DirectoryClient {
 	}
 	
 	/**
-	 * 
-	 * 
+	 * gets a set of XML lines from the server, and prints the results out on the 
+	 * Android device accordingly
+	 * @return true if no errors
+	 * @return false if an exception is thrown
 	 */
 	public boolean getDirectory() {
 		if (socket == null) return false;
 		InputStream is = null;
 		BufferedReader br = null;
 		String line;
-		
+		// TODO: print accordingly to user
 		try {
 			is = socket.getInputStream();
 			br = new BufferedReader(new InputStreamReader(is));
 			// read the line
         	while ((line = br.readLine()) != null) {
-				// incomplete
+				System.out.println(line);
+				if (line.startsWith("<Username>")) {
+					
+				}
+				else if (line.startsWith("<IPAddress>")) {
+					
+				}
+				else if (line.startsWith("<Status>")) {
+					
+				}
 			}
 		} catch (Exception e) {
 			return false;
+		} finally {
+			is.close();
+			br.close();
 		}
 		return true;
 	}
+	
+	/**
+	 * sends a phone call request to the server
+	 * @param contactIpAddr the IP address of the contact
+	 */ 
+	public boolean sendCallToServer(int contactIpAddr) {
+		if (socket == null) return false; 
+		OutputStream os = null;
+		BufferedWriter bw = null;
+		try {
+			os = socket.getOutputStream();
+			bw = new BufferedWriter(new OutputStreamWriter(os));
+			bw.write("<SendCall>");
+			bw.write(contactIpAddr);
+			bw.write("</SendCall");
+		} catch (Exception e) {
+			return false;
+		} finally {
+			os.close();
+			bw.close();
+		}
+		return true;
+	}
+	
+	/**
+	 * sends a request to the server to terminate the phone call
+	 * @param contactIpAddr of the 'other' user
+	 */
+	public boolean hangUpToServer(int contactIpAddr) {
+		if (socket == null) return false;
+		OutputStream os = null;
+		BufferedWriter bw = null;
+		try {
+			os = socket.getOutputStream();
+			bw = new BufferedWriter(new OutputStreamWriter(os));
+			bw.write("<HangUp>");
+			bw.write(contactIpAddr);
+			bw.write("</HangUp>");
+		} catch (Exception e) {
+			return false;
+		} finally {
+			os.close();
+			bw.close();
+		}
+		return true;
+	}
+	
 	
 }
