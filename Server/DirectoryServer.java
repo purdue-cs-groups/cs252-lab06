@@ -36,7 +36,7 @@ public class DirectoryServer implements Runnable
                 
                 // create a new connection for this socket
                 DirectoryServerConnection cn = new DirectoryServerConnection(this, clientSocket);                
-                _connections.put(clientSocket.getInetAddress().getHostAddress(), cn);
+                _connections.put(clientSocket.getRemoteSocketAddress().toString(), cn);
                                 
                 // launch a new thread for this connection
                 Thread th = new Thread(cn);
