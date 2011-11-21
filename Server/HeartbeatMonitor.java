@@ -46,7 +46,8 @@ public class HeartbeatMonitor implements Runnable
                             _ds._directory.remove(target);                            
                         }
                         
-                        e.getValue()._clientSocket.close();
+                        e.getValue()._clientSocket.close();                        
+                        _ds._connections.remove(e.getKey());
                     }
                     catch (IOException ex)
                     {
