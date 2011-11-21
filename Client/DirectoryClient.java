@@ -2,151 +2,152 @@ import java.util.*;
 import java.net.*;
 import java.io.*;
 
-/*
- * @class DirectoryClient
- * opens a connection to the server
- * writes lines of a XML file to the server
- */
-public class DirectoryClient {
-	
-	private byte [] ipAddr;
-	private int port = 6900;
-	private Socket socket;
-	
-	// TODO: set up the IP Address. It is currently uninitialized.
-	public DirectoryClient() {
-		ipAddr = new byte[4]; 
-		socket = null;
-	}
-	
-	/** 
-	 * opens a connection to the server
-	 * @return true if connection is established
-	 * @return false if connection is refused
-	 */
-	public boolean openConnection() {			
-		try {
-			System.out.println("Opening a socket to the server......");
-			InetAddress addr = InetAddress.getByAddress(ipAddr);
-			socket = new Socket(addr, port);		
-		} catch (UnknownHostException u) {
-			System.out.println("Unknown Host Exception: " + u.getMessage());
-			return false;
-		} catch (IOException i) {
-			System.out.println("IO Exception: " + i.getMessage());
-			return false;
-		}
-		return true;
-	}
-	
-	/**
-	 * adds a user to the server
-	 * @return true if the user is added
-	 * @return false if otherwise or if socket is not initialized
-	 */
-	public boolean addUserToServer(String username) {
-		// if the connection to the server is not opened, return false;
-		if (socket == null) return false; 
-		OutputStream os = null;
-		BufferedWriter bw = null;
-		try {
-			//TODO: make username generic @ <Username> .. </Username>
-			os = socket.getOutputStream();
-			bw = new BufferedWriter(new OutputStreamWriter(os));
-			bw.write("<AddUser>");
-			bw.newLine();
-			bw.write("<Username>" + username + "</Username>");
-			bw.newLine();
-			bw.write("</AddUser>");
-			os.close();
-			bw.close();
-		} catch (Exception e) {
-			System.out.println("Exception caught: " + e.getMessage());
-			return false;
-		}
-		return true;
-	}
-	
-	/**
-	 * gets a set of XML lines from the server, and prints the results out on the 
-	 * Android device accordingly
-	 * @return true if no errors
-	 * @return false if an exception is thrown
-	 */
-	public boolean getDirectory() {
-		if (socket == null) return false;
-		InputStream is = null;
-		BufferedReader br = null;
-		String line;
-		// TODO: print accordingly to user
-		try {
-			is = socket.getInputStream();
-			br = new BufferedReader(new InputStreamReader(is));
-			// read the line
-        	while ((line = br.readLine()) != null) {
-				System.out.println(line);
-				if (line.startsWith("<Username>")) {
-					
-				}
-				else if (line.startsWith("<IPAddress>")) {
-					
-				}
-				else if (line.startsWith("<Status>")) {
-					
-				}
-				
-			}
-			is.close();
-			br.close();
-		} catch (Exception e) {
-			return false;
-		}
-		return true;
-	}
-	
-	/**
-	 * sends a phone call request to the server
-	 * @param contactIpAddr the IP address of the contact
-	 */ 
-	public boolean sendCallToServer(int contactIpAddr) {
-		if (socket == null) return false; 
-		OutputStream os = null;
-		BufferedWriter bw = null;
-		try {
-			os = socket.getOutputStream();
-			bw = new BufferedWriter(new OutputStreamWriter(os));
-			bw.write("<SendCall>");
-			bw.write(contactIpAddr);
-			bw.write("</SendCall");
-			os.close();
-			bw.close();
-		} catch (Exception e) {
-			return false;
-		} 
-		return true;
-	}
-	
-	/**
-	 * sends a request to the server to terminate the phone call
-	 * @param contactIpAddr of the 'other' user
-	 */
-	public boolean hangUpToServer(int contactIpAddr) {
-		if (socket == null) return false;
-		OutputStream os = null;
-		BufferedWriter bw = null;
-		try {
-			os = socket.getOutputStream();
-			bw = new BufferedWriter(new OutputStreamWriter(os));
-			bw.write("<HangUp>");
-			bw.write(contactIpAddr);
-			bw.write("</HangUp>");
-			os.close();
-			bw.close();
-		} catch (Exception e) {
-			return false;
-		} 
-		return true;
-	}
-	
-	
+public class DirectoryClient
+{    
+    private String _ipAddress;
+    private int _port = 6900;
+    
+    private Socket _socket = null;
+    
+    public DirectoryClient(String ipAddress)
+    {
+        _ipAddress = ipAddress;
+    }
+    
+    public boolean connect()
+    {            
+        try
+        {
+            _socket = new Socket(_ipAddress, _port);        
+        }
+        catch (Exception ex)
+        {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    public boolean addUser(String username) throws IOException
+    {
+        if (_socket == null)
+        {
+            throw new IOException("Not connected to server.");
+        }
+        
+        try
+        {
+            PrintWriter out = new PrintWriter(_socket.getOutputStream(), true);
+            
+            out.println("<AddUser>");
+            out.println("<Username>" + username + "</Username>");
+            out.println("</AddUser>");
+        } 
+        catch (Exception ex) 
+        {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    public ArrayList<User> getDirectory() throws IOException
+    {
+        if (_socket == null)
+        {
+            throw new IOException("Not connected to server.");
+        }
+        
+        ArrayList<User> directory = new ArrayList<User>();
+        
+        try
+        {
+            PrintWriter out = new PrintWriter(_socket.getOutputStream(), true);            
+            out.println("<GetDirectory></GetDirectory>");
+            
+            InputStream is = _socket.getInputStream();
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            
+            String line;
+            
+            while ((line = br.readLine()) != null)
+            {
+                if (line.startsWith("<User>"))
+                {
+                    String username = br.readLine();
+                    username = username.substring(10, username.length() - 11);
+                    
+                    String ipAddress = br.readLine();
+                    ipAddress = ipAddress.substring(11, ipAddress.length() - 12);
+                    
+                    String status = br.readLine();
+                    status = status.substring(8, status.length() - 9);
+                    
+                    User u = new User(username, ipAddress);
+                    u.setStatus(status);
+                    
+                    directory.add(u);
+                }
+                else
+                {
+                    // TODO: this needs to be refactored 
+                    if (line.startsWith("<Directory>") == false && line.startsWith("</User>") == false)
+                        break;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // TODO: handle this exception
+        }
+        
+        return directory;
+    }
+    
+    public boolean sendCall(int destinationIPAddress) throws IOException
+    {
+        if (_socket == null)
+        {
+            throw new IOException("Not connected to server.");
+        }
+        
+        try
+        {
+            PrintWriter out = new PrintWriter(_socket.getOutputStream(), true);
+            
+            out.println("<SendCall>");
+            out.println("<IPAddress>" + destinationIPAddress + "</IPAddress>");
+            out.println("</SendCall>");
+        }
+        catch (Exception ex)
+        {
+            return false;
+        } 
+        
+        return true;
+    }
+    
+    public boolean hangUp(int destinationIPAddress) throws IOException
+    {
+        if (_socket == null)
+        {
+            throw new IOException("Not connected to server.");
+        }
+        
+        try
+        {
+            PrintWriter out = new PrintWriter(_socket.getOutputStream(), true);
+            
+            out.println("<HangUp>");
+            out.println("<IPAddress>" + destinationIPAddress + "</IPAddress>");
+            out.println("</HangUp>");
+        }
+        catch (Exception ex)
+        {
+            return false;
+        } 
+        
+        return true;
+    }
 }
+
