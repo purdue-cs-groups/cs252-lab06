@@ -35,7 +35,7 @@ public class HeartbeatMonitor implements Runnable
                         User target = null;
                         for (User u : _ds._directory)
                         {
-                            if (u.getIPAddress().equals(e.getValue()._clientSocket.getInetAddress().getHostAddress()))
+                            if (u.getIPAddress().equals(e.getValue()._clientSocket.getRemoteSocketAddress().toString()))
                             {
                                 target = u;
                             }
