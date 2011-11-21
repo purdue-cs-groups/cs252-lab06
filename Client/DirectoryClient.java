@@ -9,12 +9,13 @@ import java.io.*;
  */
 public class DirectoryClient {
 	
-	private int ipAddr;
+	private byte [] ipAddr;
 	private int port = 6900;
 	private Socket socket;
 	
+	// TODO: set up the IP Address. It is currently uninitialized.
 	public DirectoryClient() {
-		ipAddr = 0;
+		ipAddr = new byte[4]; 
 		socket = null;
 	}
 	
@@ -23,10 +24,10 @@ public class DirectoryClient {
 	 * @return true if connection is established
 	 * @return false if connection is refused
 	 */
-	public boolean openConnection() {
-		InetAddress addr = InetAddress.getByAddress(ipAddr);			
+	public boolean openConnection() {			
 		try {
 			System.out.println("Opening a socket to the server......");
+			InetAddress addr = InetAddress.getByAddress(ipAddr);
 			socket = new Socket(addr, port);		
 		} catch (UnknownHostException u) {
 			System.out.println("Unknown Host Exception: " + u.getMessage());
@@ -57,12 +58,11 @@ public class DirectoryClient {
 			bw.write("<Username>" + username + "</Username>");
 			bw.newLine();
 			bw.write("</AddUser>");
+			os.close();
+			bw.close();
 		} catch (Exception e) {
 			System.out.println("Exception caught: " + e.getMessage());
 			return false;
-		} finally {
-			os.close();
-			bw.close();
 		}
 		return true;
 	}
@@ -94,12 +94,12 @@ public class DirectoryClient {
 				else if (line.startsWith("<Status>")) {
 					
 				}
+				
 			}
-		} catch (Exception e) {
-			return false;
-		} finally {
 			is.close();
 			br.close();
+		} catch (Exception e) {
+			return false;
 		}
 		return true;
 	}
@@ -118,12 +118,11 @@ public class DirectoryClient {
 			bw.write("<SendCall>");
 			bw.write(contactIpAddr);
 			bw.write("</SendCall");
-		} catch (Exception e) {
-			return false;
-		} finally {
 			os.close();
 			bw.close();
-		}
+		} catch (Exception e) {
+			return false;
+		} 
 		return true;
 	}
 	
@@ -141,12 +140,11 @@ public class DirectoryClient {
 			bw.write("<HangUp>");
 			bw.write(contactIpAddr);
 			bw.write("</HangUp>");
-		} catch (Exception e) {
-			return false;
-		} finally {
 			os.close();
 			bw.close();
-		}
+		} catch (Exception e) {
+			return false;
+		} 
 		return true;
 	}
 	
