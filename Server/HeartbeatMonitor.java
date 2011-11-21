@@ -23,7 +23,7 @@ public class HeartbeatMonitor implements Runnable
             Long currTime = Calendar.getInstance().getTimeInMillis();
             Long timeDiff = new Long(0);
 
-            DirectoryServerConnection target1 = null;
+            DirectoryServerConnection target = null;
             for (DirectoryServerConnection c : _ds._connections)
             {
                 timeDiff = currTime - c._lastKeepAliveTime;
@@ -33,22 +33,13 @@ public class HeartbeatMonitor implements Runnable
                     // kill connection
                     try
                     {
-                        User target2 = null;
-                        for (User u : _ds._directory)
+                        if (c._user != null)
                         {
-                            if (u.getIPAddress().equals(c.getIPAddress()))
-                            {
-                                target2 = u;
-                            }
-                        }
-                        
-                        if (target2 != null)
-                        {
-                            _ds._directory.remove(target2);                            
+                            _ds._directory.remove(c._user);                            
                         }
                         
                         c._clientSocket.close();                        
-                        target1 = c;
+                        target = c;
                     }
                     catch (IOException ex)
                     {
@@ -64,9 +55,9 @@ public class HeartbeatMonitor implements Runnable
                 }
             }
             
-            if (target1 != null)
+            if (target != null)
             {
-                _ds._connections.remove(target1);                            
+                _ds._connections.remove(target);                            
             }
 
             try
