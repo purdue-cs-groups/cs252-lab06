@@ -32,6 +32,20 @@ public class HeartbeatMonitor implements Runnable
                     // kill connection
                     try
                     {
+                        User target = null;
+                        for (User u : _ds._directory)
+                        {
+                            if (u.getIPAddress().equals(e.getValue()._clientSocket.getInetAddress().getHostAddress()))
+                            {
+                                target = u;
+                            }
+                        }
+                        
+                        if (target != null)
+                        {
+                            _ds._directory.remove(target);                            
+                        }
+                        
                         e.getValue()._clientSocket.close();
                     }
                     catch (IOException ex)
