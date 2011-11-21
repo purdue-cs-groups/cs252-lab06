@@ -8,6 +8,8 @@ public class DirectoryServerConnection implements Runnable
     Socket _clientSocket = null;
     Long _lastKeepAliveTime = new Long(0);
     
+    User _user = null;
+    
     DirectoryServerConnection(DirectoryServer host, Socket clientSocket)
     {
         _host = host;
@@ -103,6 +105,8 @@ public class DirectoryServerConnection implements Runnable
     {
         User u = new User(username, _clientSocket.getRemoteSocketAddress().toString().substring(1));
         _host._directory.add(u);
+        
+        _user = u;
 
         _host.sendUpdatedDirectory();
     }
