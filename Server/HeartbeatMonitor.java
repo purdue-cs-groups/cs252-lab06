@@ -23,7 +23,7 @@ public class HeartbeatMonitor implements Runnable
             Long currTime = Calendar.getInstance().getTimeInMillis();
             Long timeDiff = new Long(0);
 
-            Map.Entry<String, DirectoryServerConnection> target1 = null
+            Map.Entry<String, DirectoryServerConnection> target1 = null;
             for (Map.Entry<String, DirectoryServerConnection> e : _ds._connections.entrySet())
             {
                 timeDiff = currTime - e.getValue()._lastKeepAliveTime;
