@@ -23,6 +23,7 @@ public class HeartbeatMonitor implements Runnable
             Long currTime = Calendar.getInstance().getTimeInMillis();
             Long timeDiff = new Long(0);
 
+            Map.Entry<String, DirectoryServerConnection> target1 = null
             for (Map.Entry<String, DirectoryServerConnection> e : _ds._connections.entrySet())
             {
                 timeDiff = currTime - e.getValue()._lastKeepAliveTime;
@@ -32,22 +33,22 @@ public class HeartbeatMonitor implements Runnable
                     // kill connection
                     try
                     {
-                        User target = null;
+                        User target2 = null;
                         for (User u : _ds._directory)
                         {
                             if (u.getIPAddress().equals(e.getValue()._clientSocket.getRemoteSocketAddress().toString().substring(1)))
                             {
-                                target = u;
+                                target2 = u;
                             }
                         }
                         
-                        if (target != null)
+                        if (target2 != null)
                         {
-                            _ds._directory.remove(target);                            
+                            _ds._directory.remove(target2);                            
                         }
                         
                         e.getValue()._clientSocket.close();                        
-                        _ds._connections.remove(e.getKey());
+                        target1 = e;
                     }
                     catch (IOException ex)
                     {
@@ -61,6 +62,11 @@ public class HeartbeatMonitor implements Runnable
                     // connection is active
                     System.out.println(e.getKey() + " can live.");
                 }
+            }
+            
+            if (target1 != null)
+            {
+                _ds._connections.remove(target1.getKey());                            
             }
 
             try
