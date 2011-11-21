@@ -1,7 +1,7 @@
 all: DirectoryClient SampleClient
 
 DirectoryClient:
-	javac User.java DirectoryClient.java
+	javac User.java HeartbeatClient.java DirectoryClient.java
 
 SampleClient:
 	javac SampleClient.java

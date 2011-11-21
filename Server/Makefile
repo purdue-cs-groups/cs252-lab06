@@ -7,7 +7,7 @@ VoiceServer:
 	javac VoiceServerConnection.java VoiceServer.java
 
 Server:
-	javac Server.java
+	javac HeartbeatMonitor.java Server.java
 
 clean:
 	rm -f *.class

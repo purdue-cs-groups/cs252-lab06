@@ -19,6 +19,12 @@ public class DirectoryClient
         try
         {
             _socket = new Socket(_ipAddress, _port);        
+            
+            // initialize keep-alive client 
+            HeartbeatClient hc = new HeartbeatClient(_socket);
+            
+            Thread t1 = new Thread(hc);
+            t1.start();
         }
         catch (Exception ex)
         {

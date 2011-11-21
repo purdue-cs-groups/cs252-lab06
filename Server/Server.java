@@ -18,10 +18,10 @@ public class Server
         if ((args.length > 0 && args[0].equals("--disable-keep-alive") == false) ||
             (args.length == 0))
         {
-            ConnectionChecker cs = new ConnectionChecker(ds);
+            HeartbeatMonitor hm = new HeartbeatMonitor(ds);
             
-            Thread connectionChecker = new Thread(cs);
-            connectionChecker.start();
+            Thread t3 = new Thread(hm);
+            t3.start();
         }
                 
         // create a new instance of the voice server
