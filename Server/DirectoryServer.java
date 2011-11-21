@@ -6,13 +6,13 @@ public class DirectoryServer implements Runnable
 {
     private int _port = 0;
     ArrayList<User> _directory = null;
-    Map<String, DirectoryServerConnection> _connections = null;
+    ArrayList<DirectoryServerConnection> _connections = null;
     
     DirectoryServer(int port)
     {
         _port = port;
         _directory = new ArrayList<User>();
-        _connections = new HashMap<String, DirectoryServerConnection>();
+        _connections = new ArrayList<DirectoryServerConnection>();
     }
 
     public void run()
@@ -36,7 +36,7 @@ public class DirectoryServer implements Runnable
                 
                 // create a new connection for this socket
                 DirectoryServerConnection cn = new DirectoryServerConnection(this, clientSocket);                
-                _connections.put(clientSocket.getRemoteSocketAddress().toString().substring(1), cn);
+                _connections.add(cn);
                                 
                 // launch a new thread for this connection
                 Thread th = new Thread(cn);
@@ -51,9 +51,9 @@ public class DirectoryServer implements Runnable
     
     public void sendUpdatedDirectory()
     {
-        for (Map.Entry<String, DirectoryServerConnection> e : _connections.entrySet())
+        for (DirectoryServerConnection c : _connections)
         {
-            e.getValue().getDirectory(); 
+            c.getDirectory(); 
         }
     }
 }

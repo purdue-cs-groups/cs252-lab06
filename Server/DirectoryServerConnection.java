@@ -13,7 +13,12 @@ public class DirectoryServerConnection implements Runnable
         _host = host;
         _clientSocket = clientSocket; 
         _lastKeepAliveTime = Calendar.getInstance().getTimeInMillis();
-    } 
+    }
+    
+    public String getIPAddress()
+    {
+        return _clientSocket.getRemoteSocketAddress().toString().substring(1);
+    }
 
     public void run()
     {

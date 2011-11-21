@@ -23,10 +23,10 @@ public class HeartbeatMonitor implements Runnable
             Long currTime = Calendar.getInstance().getTimeInMillis();
             Long timeDiff = new Long(0);
 
-            Map.Entry<String, DirectoryServerConnection> target1 = null;
-            for (Map.Entry<String, DirectoryServerConnection> e : _ds._connections.entrySet())
+            DirectoryServerConnection target1 = null;
+            for (DirectoryServerConnection c : _ds._connections)
             {
-                timeDiff = currTime - e.getValue()._lastKeepAliveTime;
+                timeDiff = currTime - c._lastKeepAliveTime;
 
                 if (timeDiff > _checkTime)
                 {
@@ -36,7 +36,7 @@ public class HeartbeatMonitor implements Runnable
                         User target2 = null;
                         for (User u : _ds._directory)
                         {
-                            if (u.getIPAddress().equals(e.getValue()._clientSocket.getRemoteSocketAddress().toString().substring(1)))
+                            if (u.getIPAddress().equals(c.getIPAddress()))
                             {
                                 target2 = u;
                             }
@@ -47,26 +47,26 @@ public class HeartbeatMonitor implements Runnable
                             _ds._directory.remove(target2);                            
                         }
                         
-                        e.getValue()._clientSocket.close();                        
-                        target1 = e;
+                        c._clientSocket.close();                        
+                        target1 = c;
                     }
                     catch (IOException ex)
                     {
                         // TODO: handle this exception            
                     }
                     
-                    System.out.println(e.getKey() + " needs to die.");
+                    System.out.println(c.getIPAddress() + " needs to die.");
                 }
                 else
                 {
                     // connection is active
-                    System.out.println(e.getKey() + " can live.");
+                    System.out.println(c.getIPAddress() + " can live.");
                 }
             }
             
             if (target1 != null)
             {
-                _ds._connections.remove(target1.getKey());                            
+                _ds._connections.remove(target1);                            
             }
 
             try
@@ -80,3 +80,4 @@ public class HeartbeatMonitor implements Runnable
         }
     }
 }
+
