@@ -15,15 +15,12 @@ public class Server
         t1.start();
 
         // create a new instance of the heartbeat monitor
-        if (args.length > 0)
+        if (args.length == 0 || args[0] != "--disable-keep-alive")
         {
-            if (args[0] == "--disable-keep-alive")
-            {
-                ConnectionChecker cs = new ConnectionChecker(ds);
+            ConnectionChecker cs = new ConnectionChecker(ds);
             
-                Thread connectionChecker = new Thread(cs);
-                connectionChecker.start();
-            }
+            Thread connectionChecker = new Thread(cs);
+            connectionChecker.start();
         }
                 
         // create a new instance of the voice server
