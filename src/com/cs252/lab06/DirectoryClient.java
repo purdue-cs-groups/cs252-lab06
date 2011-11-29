@@ -1,3 +1,5 @@
+package com.cs252.lab06;
+
 import java.util.*;
 import java.net.*;
 import java.io.*;
@@ -5,7 +7,8 @@ import java.io.*;
 public class DirectoryClient
 {    
     private String _ipAddress;
-    private int _port = 6400;
+    private int _port = 7000;
+    
     
     private Socket _socket = null;
     
@@ -18,9 +21,8 @@ public class DirectoryClient
     {            
         try
         {
-            _socket = new Socket(_ipAddress, _port);        
-            
-            // initialize keep-alive client 
+        	_socket = new Socket(InetAddress.getByName(_ipAddress), _port);
+         	// initialize keep-alive client 
             HeartbeatClient hc = new HeartbeatClient(_socket);
             
             Thread t1 = new Thread(hc);
@@ -156,4 +158,3 @@ public class DirectoryClient
         return true;
     }
 }
-
