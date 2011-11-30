@@ -7,7 +7,7 @@ import java.io.*;
 public class DirectoryClient
 {    
     private String _ipAddress;
-    private int _port = 7000;
+    private int _port = 6900;
     
     
     private Socket _socket = null;
