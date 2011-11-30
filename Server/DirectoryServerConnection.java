@@ -103,6 +103,7 @@ public class DirectoryServerConnection implements Runnable
     
     public void addUser(String username)
     {
+        // TODO: check if IP already exists
         User u = new User(username, _clientSocket.getRemoteSocketAddress().toString().substring(1));
         _host._directory.add(u);
         
