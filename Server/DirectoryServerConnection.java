@@ -43,17 +43,17 @@ public class DirectoryServerConnection implements Runnable
                     String username = br.readLine();
                     username = username.substring(10, username.length() - 11);
 
-                    System.out.println("\nAddUser Request");
+                    /*System.out.println("\nAddUser Request");
                     System.out.println("---------------");
                     System.out.println("New user:   " + username);
-                    System.out.println("IP Address: " + _clientSocket.getRemoteSocketAddress().toString().substring(1));
+                    System.out.println("IP Address: " + _clientSocket.getRemoteSocketAddress().toString().substring(1));*/
                     
                     addUser(username);
                 }
                 // GetDirectory request
                 else if (line.startsWith("<GetDirectory>"))
                 {
-                    System.out.println("\nGetDirectory Request");
+                    //System.out.println("\nGetDirectory Request");
                     
                     getDirectory();
                 }    
@@ -62,20 +62,22 @@ public class DirectoryServerConnection implements Runnable
                 {
                     String sendIP = br.readLine();
                     sendIP = sendIP.substring(11, sendIP.length() - 12);
-                    System.out.println("\nSendCall Request");
+                    /*System.out.println("\nSendCall Request");
                     System.out.println("----------------");
-                    System.out.println("IP Address: " + sendIP);
+                    System.out.println("IP Address: " + sendIP);*/
 
 					sendCallRequest(sendIP);
                 }
                 // AcceptCall request
                 else if (line.startsWith("<AcceptCall>"))
                 {
-                    String acceptIP = br.readLine();
-                    acceptIP = acceptIP.substring(11, acceptIP.length() - 12);
-                    System.out.println("\nAcceptCall Request");
+                    String senderIP = br.readLine();
+                    senderIP = senderIP.substring(11, senderIP.length() - 12);
+                    /*System.out.println("\nAcceptCall Request");
                     System.out.println("------------------");
-                    System.out.println("IP Address: " + acceptIP);
+                    System.out.println("IP Address: " + senderIP);*/
+
+					acceptCallRequest(senderIP);
                 }
                 // Hangup request
                 else if (line.startsWith("<Hangup>"))
@@ -166,6 +168,41 @@ public class DirectoryServerConnection implements Runnable
 		{
 			System.out.println("Error: " + ex.getMessage());
 		}
+	}
+
+	public void acceptCallRequest(String senderIP) 
+	{
+		Socket _senderSocket = null;
+
+		try 
+		{
+			// get the socket of the caller
+			for (DirectoryServerConnection _con: _host._connections)
+			{
+				if (_con._user.getIPAddress().equals(senderIP))
+				{
+					_senderSocket = _con._clientSocket;
+					break;
+				}
+			}
+
+			PrintWriter outSender = new PrintWriter(_senderSocket.getOutputStream(), true);
+			outSender.println("<Connect>");
+			outSender.println("<IpAddress>lore.cs.purdue.edu:6901</IpAddress>");
+			outSender.println("</Connect>");
+
+			PrintWriter outClient = new PrintWriter(_clientSocket.getOutputStream(), true);
+			outClient.println("<Connect>");
+			outClient.println("<IpAddress>lore.cs.purdue.edu:6901</IpAddress>");
+			outClient.println("</Connect>");
+
+			return;
+		}
+		catch (IOException ex) 
+		{
+			System.out.println("Error: " + ex.getMessage());
+		} 
+		
 	}
 }
 
