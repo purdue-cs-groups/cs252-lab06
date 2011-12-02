@@ -42,7 +42,10 @@ public class VoiceServer implements Runnable
                 {
                     if ((c.getIPAddress() == ipAddress) &&
                         (c.getPort() == port))
+                    {
                         target = c;
+                        break;
+                    }
                 }
                 
                 if (target == null)
