@@ -182,6 +182,9 @@ public class DirectoryServerConnection implements Runnable
 				if (_con._user.getIPAddress().equals(senderIP))
 				{
 					_senderSocket = _con._clientSocket;
+
+					// set the sender to Busy status
+					_con._user.setStatus("Busy");
 					break;
 				}
 			}
@@ -195,6 +198,12 @@ public class DirectoryServerConnection implements Runnable
 			outClient.println("<Connect>");
 			outClient.println("<IpAddress>lore.cs.purdue.edu:6901</IpAddress>");
 			outClient.println("</Connect>");
+
+			// set sendee to Busy status
+			_user.setStatus("Busy");
+
+			// send updated directory to everyone
+			getDirectory();
 
 			return;
 		}
