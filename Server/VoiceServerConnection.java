@@ -2,39 +2,25 @@ import java.util.*;
 import java.io.*; 
 import java.net.*;
 
-public class VoiceServerConnection implements Runnable
+public class VoiceServerConnection
 {
-    private VoiceServer _host = null; 
-    Socket _clientSocket = null;
+    private InetAddress _ipAddress = null; 
+    private int _port = 0;
     
-    VoiceServerConnection(VoiceServer host, Socket clientSocket)
+    VoiceServerConnection(InetAddress ipAddress, int port)
     {
-        _host = host;
-        _clientSocket = clientSocket;
+        _ipAddress = ipAddress;
+        _port = port;
     } 
 
-    public void run()
+    public InetAddress getIPAddress()
     {
-        try
-        {
-            System.out.println("Thread for connection started.");
-            
-            // load in the stream data
-            InputStream is = _clientSocket.getInputStream();
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-
-            String line;
-            
-            // read each line
-            while ((line = br.readLine()) != null)
-            {
-                // do something
-            }
-        }
-        catch (IOException ex)
-        {
-            // TODO: handle this exception
-        }
+        return _ipAddress;
+    }
+    
+    public int getPort()
+    {
+        return _port;
     }
 }
 
