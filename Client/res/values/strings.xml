@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="hello">Hello World, CS252lab06Activity!</string>
-    <string name="app_name">CS252lab06</string>
-    <string name="loginID">login ID</string>
-    <string name="login">Login</string>
-    <string name="select">Select</string>
-    <string name="mainScreen">mainScreen</string>
-    <string name="DirectoryScreen">DirectoryScreen</string>
-    <string name="directoryscreen">directoryscreen</string>
-
+    <string name="app_name">Purdue CS 252 - VOIP Client</string>
 
 </resources>
