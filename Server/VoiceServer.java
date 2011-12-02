@@ -5,12 +5,12 @@ import java.net.*;
 public class VoiceServer implements Runnable
 {
     private int _port = 0;
-    Map<String, VoiceServerConnection> _connections = null;
+    ArrayList<VoiceServerConnection> _connections = null;
     
     VoiceServer(int port)
     {
         _port = port;
-        _connections = new HashMap<String, VoiceServerConnection>();
+        _connections = new ArrayList<VoiceServerConnection>();
     }
 
     public void run()
@@ -20,25 +20,52 @@ public class VoiceServer implements Runnable
         try
         {
             // create a socket for handling incoming requests
-            ServerSocket server = new ServerSocket(_port);
-
-            while (true)
+            DatagramSocket serverSocket = new DatagramSocket(_port);
+            
+            while(true)
             {
-                System.out.println("Listening for conections on port " + _port + "...");
+                // receive the incoming packet
+                byte[] buffer = new byte[1024];
+                DatagramPacket receivePacket = new DatagramPacket(buffer, buffer.length);
+                serverSocket.receive(receivePacket);
                 
-                // wait for an incoming connection
-                Socket clientSocket = server.accept();
+                // extract the byte stream data
+                buffer = receivePacket.getData();
                 
-                System.out.println("Connection received.");                
-                System.out.println("Launching new thread for connection...");
+                // extract the IP address and port number
+                InetAddress ipAddress = receivePacket.getAddress();
+                int port = receivePacket.getPort();
                 
-                // create a new connection for this socket
-                VoiceServerConnection cn = new VoiceServerConnection(this, clientSocket);                
-                _connections.put(clientSocket.getInetAddress().getHostAddress(), cn);
-                                
-                // launch a new thread for this connection
-                Thread th = new Thread(cn);
-                th.start();
+                // if this is a new connection, store it in our list
+                VoiceServerConnection target = null;
+                for (VoiceServerConnection c : _connections)
+                {
+                    if (c.getIPAddress() == ipAddress)
+                        target = c;
+                }
+                
+                if (target == null)
+                {
+                    VoiceServerConnection vsc = new VoiceServerConnection(ipAddress, port);
+                    _connections.add(vsc);
+                }
+                
+                // send the packet data
+                for (VoiceServerConnection c : _connections)
+                {
+                    try
+                    {
+                        if (c.getIPAddress() != ipAddress) // we don't need to hear our own audio
+                        {
+                            DatagramPacket sendPacket = new DatagramPacket(buffer, buffer.length, c.getIPAddress(), c.getPort());
+                            serverSocket.send(sendPacket);
+                        }
+                    }
+                    catch (IOException ex)
+                    {
+                        // TODO: handle this exception
+                    }
+                }
             }
         }
         catch (IOException ex)
