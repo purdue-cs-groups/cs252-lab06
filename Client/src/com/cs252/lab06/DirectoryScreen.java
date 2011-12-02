@@ -20,7 +20,8 @@ import android.widget.Toast;
 public class DirectoryScreen extends ListActivity implements OnItemClickListener
 {
     private ProgressDialog connectDialog;
-    
+    private ArrayList<String> usernames = new ArrayList<String>();
+    private ArrayAdapter<String> aa = null;
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -35,7 +36,10 @@ public class DirectoryScreen extends ListActivity implements OnItemClickListener
         Bundle extras = getIntent().getExtras(); // Get user item from CS252lab06Activity
         String username = extras.getString("username");
         
+        
         loginProcess(username);
+        aa = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, usernames); 
+    	setListAdapter(aa);
         
         connectDialog.dismiss();
         
@@ -63,7 +67,7 @@ public class DirectoryScreen extends ListActivity implements OnItemClickListener
             dc.connect();
             dc.addUser(username);
             
-            dc.getDirectory();
+            //dc.getDirectory();
         }
         catch (Exception ex)
         {
@@ -80,13 +84,12 @@ public class DirectoryScreen extends ListActivity implements OnItemClickListener
 
     public void updateDirectory(ArrayList<User> directory)
     {
-    	ArrayList<String> usernames = new ArrayList<String>();
+    	usernames.clear();
     	for (User u : directory)
     	{
     		usernames.add(u.getUsername());
     	}
-    	
-    	setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, usernames));
+    	aa.notifyDataSetChanged();
     }
     
     public void displayIncomingCall(String username, String ipAddress)
