@@ -82,20 +82,22 @@ public class DirectoryServerConnection implements Runnable
                 // Hangup request
                 else if (line.startsWith("<Hangup>"))
                 {
-                    String hangupIP = br.readLine();
-                    hangupIP = hangupIP.substring(11, hangupIP.length() - 12);
-                    System.out.println("\nHangup Request");
+                    String senderIP = br.readLine();
+                    senderIP = senderIP.substring(11, senderIP.length() - 12);
+                    /*System.out.println("\nHangup Request");
                     System.out.println("--------------");
-                    System.out.println("IP Address: " + hangupIP);
+                    System.out.println("IP Address: " + hangupIP);*/
+
+					hangupRequest(senderIP);
                 }
                 // KeepAlive request
                 else if (line.startsWith("<KeepAlive>")) 
                 {
                     _lastKeepAliveTime = Calendar.getInstance().getTimeInMillis();
                     
-                    System.out.println("\nKeepAlive Request");
+                    /*System.out.println("\nKeepAlive Request");
                     System.out.println("-----------------");
-                    System.out.println("Timestamp for " + _clientSocket.getRemoteSocketAddress().toString().substring(1) + ": " + _lastKeepAliveTime);
+                    System.out.println("Timestamp for " + _clientSocket.getRemoteSocketAddress().toString().substring(1) + ": " + _lastKeepAliveTime);*/
                 }	
             }
         }
@@ -203,7 +205,45 @@ public class DirectoryServerConnection implements Runnable
 			_user.setStatus("Busy");
 
 			// send updated directory to everyone
-			getDirectory();
+			_host.sendUpdatedDirectory();
+
+			return;
+		}
+		catch (IOException ex) 
+		{
+			System.out.println("Error: " + ex.getMessage());
+		} 	
+	}
+
+	public void hangupRequest(String senderIP) 
+	{
+		Socket _senderSocket = null;
+
+		try 
+		{
+			// get the socket of the caller
+			for (DirectoryServerConnection _con: _host._connections)
+			{
+				if (_con._user.getIPAddress().equals(senderIP))
+				{
+					_senderSocket = _con._clientSocket;
+
+					// set the sender to Available status
+					_con._user.setStatus("Available");
+					break;
+				}
+			}
+
+			PrintWriter outSender = new PrintWriter(_senderSocket.getOutputStream(), true);
+			outSender.println("<Hangup>");
+			outSender.println("<IpAddress>"+_user.getIPAddress()+"</IpAddress>");
+			outSender.println("</Hangup>");
+
+			// set sendee to Busy status
+			_user.setStatus("Available");
+
+			// send updated directory to everyone
+			_host.sendUpdatedDirectory();
 
 			return;
 		}
@@ -211,7 +251,6 @@ public class DirectoryServerConnection implements Runnable
 		{
 			System.out.println("Error: " + ex.getMessage());
 		} 
-		
 	}
 }
 
