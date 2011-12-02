@@ -65,6 +65,8 @@ public class DirectoryServerConnection implements Runnable
                     System.out.println("\nSendCall Request");
                     System.out.println("----------------");
                     System.out.println("IP Address: " + sendIP);
+
+					sendCallRequest(sendIP);
                 }
                 // AcceptCall request
                 else if (line.startsWith("<AcceptCall>"))
@@ -92,7 +94,7 @@ public class DirectoryServerConnection implements Runnable
                     System.out.println("\nKeepAlive Request");
                     System.out.println("-----------------");
                     System.out.println("Timestamp for " + _clientSocket.getRemoteSocketAddress().toString().substring(1) + ": " + _lastKeepAliveTime);
-                }
+                }	
             }
         }
         catch (IOException ex)
@@ -134,5 +136,36 @@ public class DirectoryServerConnection implements Runnable
             // TODO: handle this exception
         }
     }
+
+	public void sendCallRequest(String connectionIP)
+	{
+		Socket _connectionSocket = null;
+
+		try 
+		{
+			// get socket to write to
+			for (DirectoryServerConnection _con: _host._connections)
+			{
+				if (_con._user.getIPAddress().equals(connectionIP))
+				{
+					_connectionSocket = _con._clientSocket;
+					break;
+				}
+			}
+
+			PrintWriter out = new PrintWriter(_connectionSocket.getOutputStream(), true);
+
+			out.println("<IncomingCall>");
+			out.println("<Username>" + _user.getUsername() + "</Username>");
+			out.println("<IpAddress>" + _user.getIPAddress() + "</IpAddress>");
+			out.println("</IncomingCall>");
+
+			return;
+		}
+		catch (IOException ex) 
+		{
+			System.out.println("Error: " + ex.getMessage());
+		}
+	}
 }
 
