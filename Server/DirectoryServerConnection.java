@@ -66,7 +66,7 @@ public class DirectoryServerConnection implements Runnable
                     System.out.println("----------------");
                     System.out.println("IP Address: " + sendIP);*/
 
-					sendCallRequest(sendIP);
+                    sendCallRequest(sendIP);
                 }
                 // AcceptCall request
                 else if (line.startsWith("<AcceptCall>"))
@@ -77,7 +77,7 @@ public class DirectoryServerConnection implements Runnable
                     System.out.println("------------------");
                     System.out.println("IP Address: " + senderIP);*/
 
-					acceptCallRequest(senderIP);
+                    acceptCallRequest(senderIP);
                 }
                 // Hangup request
                 else if (line.startsWith("<Hangup>"))
@@ -88,7 +88,7 @@ public class DirectoryServerConnection implements Runnable
                     System.out.println("--------------");
                     System.out.println("IP Address: " + hangupIP);*/
 
-					hangupRequest(senderIP);
+                    hangupRequest(senderIP);
                 }
                 // KeepAlive request
                 else if (line.startsWith("<KeepAlive>")) 
@@ -98,7 +98,7 @@ public class DirectoryServerConnection implements Runnable
                     /*System.out.println("\nKeepAlive Request");
                     System.out.println("-----------------");
                     System.out.println("Timestamp for " + _clientSocket.getRemoteSocketAddress().toString().substring(1) + ": " + _lastKeepAliveTime);*/
-                }	
+                }    
             }
         }
         catch (IOException ex)
@@ -141,116 +141,115 @@ public class DirectoryServerConnection implements Runnable
         }
     }
 
-	public void sendCallRequest(String connectionIP)
-	{
-		Socket _connectionSocket = null;
+    public void sendCallRequest(String connectionIP)
+    {
+        Socket _connectionSocket = null;
 
-		try 
-		{
-			// get socket to write to
-			for (DirectoryServerConnection _con: _host._connections)
-			{
-				if (_con._user.getIPAddress().equals(connectionIP))
-				{
-					_connectionSocket = _con._clientSocket;
-					break;
-				}
-			}
+        try 
+        {
+            // get socket to write to
+            for (DirectoryServerConnection _con: _host._connections)
+            {
+                if (_con._user.getIPAddress().equals(connectionIP))
+                {
+                    _connectionSocket = _con._clientSocket;
+                    break;
+                }
+            }
 
-			PrintWriter out = new PrintWriter(_connectionSocket.getOutputStream(), true);
+            PrintWriter out = new PrintWriter(_connectionSocket.getOutputStream(), true);
 
-			out.println("<IncomingCall>");
-			out.println("<Username>" + _user.getUsername() + "</Username>");
-			out.println("<IpAddress>" + _user.getIPAddress() + "</IpAddress>");
-			out.println("</IncomingCall>");
+            out.println("<IncomingCall>");
+            out.println("<Username>" + _user.getUsername() + "</Username>");
+            out.println("<IpAddress>" + _user.getIPAddress() + "</IpAddress>");
+            out.println("</IncomingCall>");
 
-			return;
-		}
-		catch (IOException ex) 
-		{
-			System.out.println("Error: " + ex.getMessage());
-		}
-	}
+            return;
+        }
+        catch (IOException ex) 
+        {
+            System.out.println("Error: " + ex.getMessage());
+        }
+    }
 
-	public void acceptCallRequest(String senderIP) 
-	{
-		Socket _senderSocket = null;
+    public void acceptCallRequest(String senderIP) 
+    {
+        Socket _senderSocket = null;
 
-		try 
-		{
-			// get the socket of the caller
-			for (DirectoryServerConnection _con: _host._connections)
-			{
-				if (_con._user.getIPAddress().equals(senderIP))
-				{
-					_senderSocket = _con._clientSocket;
+        try 
+        {
+            // get the socket of the caller
+            for (DirectoryServerConnection _con: _host._connections)
+            {
+                if (_con._user.getIPAddress().equals(senderIP))
+                {
+                    _senderSocket = _con._clientSocket;
 
-					// set the sender to Busy status
-					_con._user.setStatus("Busy");
-					break;
-				}
-			}
+                    // set the sender to Busy status
+                    _con._user.setStatus("Busy");
+                    break;
+                }
+            }
 
-			PrintWriter outSender = new PrintWriter(_senderSocket.getOutputStream(), true);
-			outSender.println("<Connect>");
-			outSender.println("<IpAddress>lore.cs.purdue.edu:6901</IpAddress>");
-			outSender.println("</Connect>");
+            PrintWriter outSender = new PrintWriter(_senderSocket.getOutputStream(), true);
+            outSender.println("<Connect>");
+            outSender.println("<IpAddress>lore.cs.purdue.edu:6901</IpAddress>");
+            outSender.println("</Connect>");
 
-			PrintWriter outClient = new PrintWriter(_clientSocket.getOutputStream(), true);
-			outClient.println("<Connect>");
-			outClient.println("<IpAddress>lore.cs.purdue.edu:6901</IpAddress>");
-			outClient.println("</Connect>");
+            PrintWriter outClient = new PrintWriter(_clientSocket.getOutputStream(), true);
+            outClient.println("<Connect>");
+            outClient.println("<IpAddress>lore.cs.purdue.edu:6901</IpAddress>");
+            outClient.println("</Connect>");
 
-			// set sendee to Busy status
-			_user.setStatus("Busy");
+            // set sendee to Busy status
+            _user.setStatus("Busy");
 
-			// send updated directory to everyone
-			_host.sendUpdatedDirectory();
+            // send updated directory to everyone
+            _host.sendUpdatedDirectory();
 
-			return;
-		}
-		catch (IOException ex) 
-		{
-			System.out.println("Error: " + ex.getMessage());
-		} 	
-	}
+            return;
+        }
+        catch (IOException ex) 
+        {
+            System.out.println("Error: " + ex.getMessage());
+        }     
+    }
 
-	public void hangupRequest(String senderIP) 
-	{
-		Socket _senderSocket = null;
+    public void hangupRequest(String senderIP) 
+    {
+        Socket _senderSocket = null;
 
-		try 
-		{
-			// get the socket of the caller
-			for (DirectoryServerConnection _con: _host._connections)
-			{
-				if (_con._user.getIPAddress().equals(senderIP))
-				{
-					_senderSocket = _con._clientSocket;
+        try 
+        {
+            // get the socket of the caller
+            for (DirectoryServerConnection _con: _host._connections)
+            {
+                if (_con._user.getIPAddress().equals(senderIP))
+                {
+                    _senderSocket = _con._clientSocket;
 
-					// set the sender to Available status
-					_con._user.setStatus("Available");
-					break;
-				}
-			}
+                    // set the sender to Available status
+                    _con._user.setStatus("Available");
+                    break;
+                }
+            }
 
-			PrintWriter outSender = new PrintWriter(_senderSocket.getOutputStream(), true);
-			outSender.println("<Hangup>");
-			outSender.println("<IpAddress>"+_user.getIPAddress()+"</IpAddress>");
-			outSender.println("</Hangup>");
+            PrintWriter outSender = new PrintWriter(_senderSocket.getOutputStream(), true);
+            outSender.println("<Hangup>");
+            outSender.println("<IpAddress>"+_user.getIPAddress()+"</IpAddress>");
+            outSender.println("</Hangup>");
 
-			// set sendee to Busy status
-			_user.setStatus("Available");
+            // set sendee to Busy status
+            _user.setStatus("Available");
 
-			// send updated directory to everyone
-			_host.sendUpdatedDirectory();
+            // send updated directory to everyone
+            _host.sendUpdatedDirectory();
 
-			return;
-		}
-		catch (IOException ex) 
-		{
-			System.out.println("Error: " + ex.getMessage());
-		} 
-	}
+            return;
+        }
+        catch (IOException ex) 
+        {
+            System.out.println("Error: " + ex.getMessage());
+        } 
+    }
 }
-
