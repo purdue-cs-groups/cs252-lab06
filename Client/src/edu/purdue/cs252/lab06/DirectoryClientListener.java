@@ -36,7 +36,7 @@ public class DirectoryClientListener implements Runnable
                     username = username.substring(10, username.length() - 11);
                     
                     String ipAddress = br.readLine();
-                    ipAddress = ipAddress.substring(11, ipAddress.length() - 11);
+                    ipAddress = ipAddress.substring(11, ipAddress.length() - 12);
                     
                     Message msg = new Message();
                     msg.what = 1;

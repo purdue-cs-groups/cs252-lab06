@@ -106,7 +106,12 @@ public class DirectoryActivity extends ListActivity
     
     public void displayIncomingCall(String username, String ipAddress)
     {
-     // TODO: implement this method
+    	AlertDialog.Builder adb = new AlertDialog.Builder(DirectoryActivity.this);
+		   
+		adb.setTitle("Incoming Call");
+		adb.setMessage("You have an incoming call from " + username + " at " + ipAddress + ".");
+		adb.setPositiveButton("OK", null);
+		adb.show();
     }
     
     public void displayHangup()
