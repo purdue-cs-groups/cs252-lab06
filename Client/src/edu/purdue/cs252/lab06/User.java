@@ -1,4 +1,4 @@
-package com.cs252.lab06;
+package edu.purdue.cs252.lab06;
 
 public class User
 {
