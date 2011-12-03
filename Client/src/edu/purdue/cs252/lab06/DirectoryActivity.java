@@ -1,5 +1,7 @@
 package edu.purdue.cs252.lab06;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -21,7 +23,7 @@ public class DirectoryActivity extends Activity
     
     public void setupBindings()
 	{
-		Button loginButton = (Button)findViewById(R.id.loginButton);
+		Button loginButton = (Button)findViewById(R.id.button1);
 		loginButton.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v)
 			{
@@ -29,7 +31,7 @@ public class DirectoryActivity extends Activity
 				
 				if (!username.getText().toString().equals(""))
 				{
-					Intent i = new Intent(DirectoryActivity.this, DirectoryScreen.class);
+					Intent i = new Intent(DirectoryActivity.this, DirectoryActivity.class);
 					i.putExtra("username",username.getText().toString());
 					
 					startActivity(i);
@@ -44,4 +46,25 @@ public class DirectoryActivity extends Activity
 				}	       
 	        }
         });
+	}
+    
+    public void updateDirectory(ArrayList<User> directory)
+    {
+    	// TODO: implement this method
+    }
+    
+    public void displayIncomingCall(String username, String ipAddress)
+    {
+    	// TODO: implement this method
+    }
+    
+    public void displayHangup()
+    {
+    	// TODO: implement this method
+    }
+    
+    public void displayBusy()
+    {
+    	// TODO: implement this method
+    }
 }

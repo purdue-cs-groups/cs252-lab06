@@ -7,9 +7,9 @@ import java.io.*;
 public class DirectoryClientListener implements Runnable
 {    
     private Socket _clientSocket = null;
-    private DirectoryScreen _UIthread;
+    private DirectoryActivity _UIthread;
     
-    DirectoryClientListener(Socket clientSocket, DirectoryScreen UIthread)
+    DirectoryClientListener(Socket clientSocket, DirectoryActivity UIthread)
     {
         _clientSocket = clientSocket;
         _UIthread = UIthread;

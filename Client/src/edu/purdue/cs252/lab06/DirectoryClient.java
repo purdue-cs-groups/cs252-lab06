@@ -11,9 +11,9 @@ public class DirectoryClient
     
     private Socket _socket = null;
     
-    private DirectoryScreen _UIthread;
+    private DirectoryActivity _UIthread;
     
-    public DirectoryClient(String ipAddress, DirectoryScreen UIthread)
+    public DirectoryClient(String ipAddress, DirectoryActivity UIthread)
     {
         _ipAddress = ipAddress;
         _UIthread = UIthread;
