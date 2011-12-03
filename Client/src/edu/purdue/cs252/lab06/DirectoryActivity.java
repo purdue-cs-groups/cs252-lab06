@@ -13,22 +13,25 @@ import android.widget.EditText;
 
 public class DirectoryActivity extends Activity
 {
+	String serverAddress;
+	String username;
+	
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.directory);
         
+        Bundle extras = getIntent().getExtras();
+    	serverAddress = extras.getString("serverAddress");
+    	username = extras.getString("username");
+        
         connectToServer();
     }
     
     public void connectToServer()
     {
-    	Bundle extras = getIntent().getExtras();
-    	String serverAddress = extras.getString("serverAddress");
-    	String username = extras.getString("username");
-        
-        try
+    	try
         {
             DirectoryClient dc = new DirectoryClient(serverAddress, this);
               
@@ -39,10 +42,10 @@ public class DirectoryActivity extends Activity
         {
         	AlertDialog.Builder adb = new AlertDialog.Builder(DirectoryActivity.this);
 			   
-		   adb.setTitle("Error");
-		   adb.setMessage("Could not connect to server. Please try again later!");
-		   adb.setPositiveButton("OK", null);
-		   adb.show();
+			adb.setTitle("Error");
+			adb.setMessage(ex.getMessage());
+			adb.setPositiveButton("OK", null);
+			adb.show();
         }
     }
     

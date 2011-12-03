@@ -33,8 +33,8 @@ public class MainActivity extends Activity
 					username.getText().length() > 0)
 				{
 					Intent i = new Intent(MainActivity.this, DirectoryActivity.class);
-					i.putExtra("serverAddress", serverAddress.getText());
-					i.putExtra("username", username.getText());
+					i.putExtra("serverAddress", serverAddress.getText().toString());
+					i.putExtra("username", username.getText().toString());
 					
 					startActivity(i);
 				}

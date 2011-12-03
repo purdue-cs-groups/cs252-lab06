@@ -39,7 +39,9 @@ public class DirectoryClient
         }
         catch (Exception ex)
         {
-            return false;
+            System.out.println(ex.getMessage());
+        	
+        	return false;
         }
         
         return true;
