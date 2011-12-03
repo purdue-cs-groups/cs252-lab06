@@ -37,29 +37,8 @@ public class DirectoryActivity extends ListActivity
         
         setListAdapter(database);
         
-        setupBindings();
-        
         connectToServer();
     }
-    
-    public void setupBindings()
-	{
-		Button button1 = (Button)findViewById(R.id.button1);
-		
-		button1.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v)
-			{
-				try
-				{
-					dc.getDirectory();
-				}
-				catch (IOException e)
-				{
-					// TODO: handle this exception
-				} 
-	        }
-        });
-	}
     
     public void connectToServer()
     {
