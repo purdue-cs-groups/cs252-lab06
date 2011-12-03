@@ -35,7 +35,8 @@ public class HeartbeatMonitor implements Runnable
                     {
                         if (c._user != null)
                         {
-                            _ds._directory.remove(c._user);                            
+                            _ds._directory.remove(c._user);  
+							_ds.sendUpdatedDirectory();                          
                         }
                         
                         c._clientSocket.close();                        
