@@ -75,21 +75,19 @@ public class DirectoryActivity extends ListActivity
     		{
     			if (msg.what == 0)
     			{
-    				System.out.println("updateDirectory");
-    				
-    				updateDirectory((ArrayList<User>)msg.obj);
+    				updateDirectory(((ArrayList<User>)msg.obj));
     			}
     			else if (msg.what == 1)
     			{
-    				System.out.println("displayIncomingCall");
+    				displayIncomingCall(((String[])msg.obj)[0], ((String[])msg.obj)[1]);
     			}
     			else if (msg.what == 2)
     			{
-    				System.out.println("displayHangup");
+    				displayHangup();
     			}
     			else if (msg.what == 3)
     			{
-    				System.out.println("displayBusy");
+    				displayBusy();
     			}
     		}
     	};

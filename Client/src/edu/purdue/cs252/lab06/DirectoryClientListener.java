@@ -20,8 +20,6 @@ public class DirectoryClientListener implements Runnable
     
     public void run()
     {
-        System.out.println("Client listener starts running.");
-        
         try
         {            
             // load in the stream data
@@ -32,8 +30,6 @@ public class DirectoryClientListener implements Runnable
 
             while((line = br.readLine()) != null)
             {
-            	System.out.println("LISTENER RECEIVED DATA!!!");
-            	
             	if (line.startsWith("<IncomingCall>"))
                 {
                     String username = br.readLine();
