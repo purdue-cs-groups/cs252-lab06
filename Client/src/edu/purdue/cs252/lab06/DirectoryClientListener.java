@@ -34,29 +34,34 @@ public class DirectoryClientListener implements Runnable
             {
             	System.out.println("LISTENER RECEIVED DATA!!!");
             	
-            	// IncomingCall request
-                if (line.startsWith("<IncomingCall>"))
+            	if (line.startsWith("<IncomingCall>"))
                 {
                     String username = br.readLine();
-                    username = username.substring(10,username.length() - 11);
-                    String ipAddress = br.readLine();
-                    ipAddress = ipAddress.substring(11,ipAddress.length() - 11);
+                    username = username.substring(10, username.length() - 11);
                     
-                    //TODO: call UI method, class of that method required
+                    String ipAddress = br.readLine();
+                    ipAddress = ipAddress.substring(11, ipAddress.length() - 11);
+                    
+                    Message msg = new Message();
+                    msg.what = 1;
+                    msg.obj = new String[] { username, ipAddress };
+                    
+                    _UIthread.sendMessage(msg);
                 }
-                
-                // Hang up request
                 else if (line.startsWith("<Hangup>"))
                 {
-                    //TODO: call UI method, class of that method required
+                	Message msg = new Message();
+                    msg.what = 2;
+                    
+                    _UIthread.sendMessage(msg);
                 }
-                
-                // Busy request
                 else if (line.startsWith("<Busy>"))
                 {
-                    //TODO: call UI method, class of that method required 
+                	Message msg = new Message();
+                    msg.what = 3;
+                    
+                    _UIthread.sendMessage(msg);
                 }
-                
                 else if (line.startsWith("<Directory>"))
                 {
                     ArrayList<User> users = new ArrayList<User>();
