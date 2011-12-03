@@ -4,6 +4,8 @@ import java.util.*;
 import java.net.*;
 import java.io.*;
 
+import android.os.Handler;
+
 public class DirectoryClient
 {    
     private String _ipAddress;
@@ -11,9 +13,9 @@ public class DirectoryClient
     
     private Socket _socket = null;
     
-    private DirectoryActivity _UIthread;
+    private Handler _UIthread;
     
-    public DirectoryClient(String ipAddress, DirectoryActivity UIthread)
+    public DirectoryClient(String ipAddress, Handler UIthread)
     {
         _ipAddress = ipAddress;
         _UIthread = UIthread;
@@ -28,14 +30,16 @@ public class DirectoryClient
         	// initialize keep-alive client 
             HeartbeatClient hc = new HeartbeatClient(_socket);
             
-            Thread t1 = new Thread(hc);
+            Thread t1 = new Thread(hc, "HeartbeatClient");
             t1.start();
             
             // initialize listener
             DirectoryClientListener dcl = new DirectoryClientListener(_socket, _UIthread);
             
-            Thread t2 = new Thread(dcl);
+            Thread t2 = new Thread(dcl, "DirectoryClientListener");
             t2.start();
+            
+            System.out.println("DirectoryClientListener running on thread " + t2.getId());
         }
         catch (Exception ex)
         {

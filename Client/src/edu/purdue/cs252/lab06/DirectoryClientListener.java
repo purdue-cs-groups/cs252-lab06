@@ -4,12 +4,15 @@ import java.util.*;
 import java.net.*;
 import java.io.*;
 
+import android.os.Handler;
+import android.os.Message;
+
 public class DirectoryClientListener implements Runnable
 {    
     private Socket _clientSocket = null;
-    private DirectoryActivity _UIthread;
+    private Handler _UIthread;
     
-    DirectoryClientListener(Socket clientSocket, DirectoryActivity UIthread)
+    DirectoryClientListener(Socket clientSocket, Handler UIthread)
     {
         _clientSocket = clientSocket;
         _UIthread = UIthread;
@@ -28,8 +31,10 @@ public class DirectoryClientListener implements Runnable
             String line;
 
             while((line = br.readLine()) != null)
-            {                
-                // IncomingCall request
+            {
+            	System.out.println("LISTENER RECEIVED DATA!!!");
+            	
+            	// IncomingCall request
                 if (line.startsWith("<IncomingCall>"))
                 {
                     String username = br.readLine();
@@ -37,22 +42,19 @@ public class DirectoryClientListener implements Runnable
                     String ipAddress = br.readLine();
                     ipAddress = ipAddress.substring(11,ipAddress.length() - 11);
                     
-                    //TODO: call UI method, class of that method required 
-                    _UIthread.displayIncomingCall(username, ipAddress);
+                    //TODO: call UI method, class of that method required
                 }
                 
                 // Hang up request
                 else if (line.startsWith("<Hangup>"))
                 {
-                    //TODO: call UI method, class of that method required 
-                	_UIthread.displayHangup();
+                    //TODO: call UI method, class of that method required
                 }
                 
                 // Busy request
                 else if (line.startsWith("<Busy>"))
                 {
                     //TODO: call UI method, class of that method required 
-                	_UIthread.displayBusy();
                 }
                 
                 else if (line.startsWith("<Directory>"))
@@ -71,14 +73,19 @@ public class DirectoryClientListener implements Runnable
 
                             String status = br.readLine();
                             status = status.substring(8, status.length() - 9);
+                            
                             User u = new User(username, ipAddress);
                             u.setStatus(status);
-
+                           
                             users.add(u);                            
                         }
                     }                    
                     
-                    _UIthread.updateDirectory(users);
+                    Message msg = new Message();
+                    msg.what = 0;
+                    msg.obj = users;
+                    
+                    _UIthread.sendMessage(msg);
                 }
             }
             
@@ -88,6 +95,7 @@ public class DirectoryClientListener implements Runnable
         catch (Exception ex)
         {
             // TODO: handle exception
+        	System.out.println(ex.getMessage());
         }
     }
 }
