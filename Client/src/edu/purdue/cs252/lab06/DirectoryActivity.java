@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -18,35 +19,32 @@ public class DirectoryActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.directory);
         
-        setupBindings();
+        connectToServer();
     }
     
-    public void setupBindings()
-	{
-		Button loginButton = (Button)findViewById(R.id.button1);
-		loginButton.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v)
-			{
-				EditText username = (EditText) findViewById(R.id.editText1);
-				
-				if (!username.getText().toString().equals(""))
-				{
-					Intent i = new Intent(DirectoryActivity.this, DirectoryActivity.class);
-					i.putExtra("username",username.getText().toString());
-					
-					startActivity(i);
-				}
-				else
-				{
-				   AlertDialog.Builder adb = new AlertDialog.Builder(DirectoryActivity.this);
-				   adb.setTitle("Error");
-				   adb.setMessage("Please input your user ID");
-				   adb.setPositiveButton("Ok", null);
-				   adb.show();
-				}	       
-	        }
-        });
-	}
+    public void connectToServer()
+    {
+    	Bundle extras = getIntent().getExtras();
+    	String serverAddress = extras.getString("serverAddress");
+    	String username = extras.getString("username");
+        
+        try
+        {
+            DirectoryClient dc = new DirectoryClient(serverAddress, this);
+              
+            dc.connect();
+            dc.addUser(username);
+        }
+        catch (Exception ex)
+        {
+        	AlertDialog.Builder adb = new AlertDialog.Builder(DirectoryActivity.this);
+			   
+		   adb.setTitle("Error");
+		   adb.setMessage("Could not connect to server. Please try again later!");
+		   adb.setPositiveButton("OK", null);
+		   adb.show();
+        }
+    }
     
     public void updateDirectory(ArrayList<User> directory)
     {
