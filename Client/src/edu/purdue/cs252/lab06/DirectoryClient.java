@@ -95,7 +95,7 @@ public class DirectoryClient
         return true;
     }
     
-    public boolean sendCall(int destinationIPAddress) throws IOException
+    public boolean sendCall(String destinationIPAddress) throws IOException
     {
         if (_socket == null)
         {
@@ -118,7 +118,30 @@ public class DirectoryClient
         return true;
     }
     
-    public boolean hangUp(int destinationIPAddress) throws IOException
+    public boolean acceptCall(String destinationIPAddress) throws IOException
+    {
+        if (_socket == null)
+        {
+            throw new IOException("Not connected to server.");
+        }
+        
+        try
+        {
+            PrintWriter out = new PrintWriter(_socket.getOutputStream(), true);
+            
+            out.println("<AcceptCall>");
+            out.println("<IPAddress>" + destinationIPAddress + "</IPAddress>");
+            out.println("</AcceptCall>");
+        }
+        catch (Exception ex)
+        {
+            return false;
+        } 
+        
+        return true;
+    }
+    
+    public boolean hangUp(String destinationIPAddress) throws IOException
     {
         if (_socket == null)
         {

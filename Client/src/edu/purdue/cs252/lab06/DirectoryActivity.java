@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -108,9 +109,20 @@ public class DirectoryActivity extends ListActivity
     {
     	AlertDialog.Builder adb = new AlertDialog.Builder(DirectoryActivity.this);
 		   
-		adb.setTitle("Incoming Call");
+		adb.setTitle(ipAddress);
 		adb.setMessage("You have an incoming call from " + username + " at " + ipAddress + ".");
-		adb.setPositiveButton("OK", null);
+		adb.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which)
+			{
+				// TODO: implement this action
+	        }
+		});
+		adb.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which)
+			{
+				// TODO: implement this action
+	        }
+		});
 		adb.show();
     }
     
