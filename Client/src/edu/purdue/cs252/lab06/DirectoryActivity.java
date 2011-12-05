@@ -120,19 +120,26 @@ public class DirectoryActivity extends ListActivity
 			public void onClick(DialogInterface dialog, int which)
 			{
 				// TODO: implement this action
-					Log.i("Value Validation", "Sender IP: " + senderIP);
+				Log.i("Value Validation", "Sender IP: " + senderIP);
 					
-					try {
-						dc.acceptCall(senderIP);
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-					}
+				try {
+					dc.acceptCall(senderIP);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+				}
 	        }
 		});
 		adb.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which)
 			{
 				// TODO: implement this action
+				Log.i("Value Validation", "Sender IP: " + senderIP);
+				
+				try {
+					dc.hangUp(senderIP);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+				}
 	        }
 		});
 		adb.show();
