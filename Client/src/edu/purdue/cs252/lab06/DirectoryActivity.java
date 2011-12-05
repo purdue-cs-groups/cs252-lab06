@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -43,6 +44,7 @@ public class DirectoryActivity extends ListActivity
     
     public void connectToServer()
     {
+    	Log.i("Checkpoint", "Entered connectToServer()...");
     	Bundle extras = getIntent().getExtras();
     	serverAddress = extras.getString("serverAddress");
     	username = extras.getString("username");
@@ -105,16 +107,26 @@ public class DirectoryActivity extends ListActivity
 		database.notifyDataSetChanged();
     }
     
+    private String senderIP = null;
     public void displayIncomingCall(String username, String ipAddress)
     {
+    	senderIP = ipAddress;
+    	Log.i("Checkpoint", "Entered displayIncomingCall()...");
     	AlertDialog.Builder adb = new AlertDialog.Builder(DirectoryActivity.this);
-		   
+
 		adb.setTitle(ipAddress);
 		adb.setMessage("You have an incoming call from " + username + " at " + ipAddress + ".");
 		adb.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which)
 			{
 				// TODO: implement this action
+					Log.i("Value Validation", "Sender IP: " + senderIP);
+					
+					try {
+						dc.acceptCall(senderIP);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+					}
 	        }
 		});
 		adb.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
