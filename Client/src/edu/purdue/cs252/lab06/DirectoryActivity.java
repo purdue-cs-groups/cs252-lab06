@@ -33,6 +33,7 @@ public class DirectoryActivity extends ListActivity
 	private ArrayList<String> usernames;
 	private ArrayList<User> users;
 	
+	private AlertDialog incomingDialog = null; 
 	private ProgressDialog ringingDialog = null;
 	
     @Override
@@ -79,7 +80,22 @@ public class DirectoryActivity extends ListActivity
 							
 							ringingDialog = new ProgressDialog(DirectoryActivity.this);
 							ringingDialog.setTitle("Ringing");
-							ringingDialog.setMessage("Waiting for " + username + " to respond.");
+							ringingDialog.setMessage("Waiting for " + username + " to respond...");
+							ringingDialog.setOnCancelListener(new ProgressDialog.OnCancelListener() {
+								public void onCancel(DialogInterface dialog)
+								{
+									try
+									{
+										dc.hangUp(destinationIP);
+									}
+									catch (IOException e)
+									{
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}
+							});
+							
 							ringingDialog.show();
 						}
 						catch (IOException e)
@@ -189,9 +205,9 @@ public class DirectoryActivity extends ListActivity
     	Log.i("Checkpoint", "Entered displayIncomingCall()...");
     	AlertDialog.Builder adb = new AlertDialog.Builder(DirectoryActivity.this);
 
-		adb.setTitle("Incoming Call");
-		adb.setMessage("You have an incoming call from " + username + " at " + ipAddress + ".");
-		adb.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+    	adb.setTitle("Incoming Call");
+    	adb.setMessage("You have an incoming call from " + username + " at " + ipAddress + ".");
+    	adb.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which)
 			{
 				// TODO: implement this action
@@ -204,7 +220,7 @@ public class DirectoryActivity extends ListActivity
 				}
 	        }
 		});
-		adb.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
+    	adb.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which)
 			{
 				// TODO: implement this action
@@ -217,14 +233,22 @@ public class DirectoryActivity extends ListActivity
 				}
 	        }
 		});
-		adb.show();
+    	
+    	incomingDialog = adb.create();
+    	incomingDialog.show();
     }
     
     public void displayHangup()
     {
-    	if (ringingDialog == null) return;
+    	if (incomingDialog != null)
+    	{    	
+    		incomingDialog.dismiss();
+    	}
     	
-    	ringingDialog.dismiss();
+    	if (ringingDialog != null)
+    	{    	
+	    	ringingDialog.dismiss();
+    	}
     	
     	AlertDialog.Builder adb = new AlertDialog.Builder(DirectoryActivity.this);
 		   
@@ -236,16 +260,28 @@ public class DirectoryActivity extends ListActivity
     
     public void connect(String ipAddress)
     {
-    	if (ringingDialog == null) return;
+    	if (incomingDialog != null)
+    	{    	
+    		incomingDialog.dismiss();
+    	}
     	
-    	ringingDialog.dismiss();
+    	if (ringingDialog != null)
+    	{    	
+	    	ringingDialog.dismiss();
+    	}
     }
     
     public void displayBusy()
     {
-		if (ringingDialog == null) return;
+    	if (incomingDialog != null)
+    	{    	
+    		incomingDialog.dismiss();
+    	}
     	
-    	ringingDialog.dismiss();
+    	if (ringingDialog != null)
+    	{    	
+	    	ringingDialog.dismiss();
+    	}
     	
     	AlertDialog.Builder adb = new AlertDialog.Builder(DirectoryActivity.this);
 		   
