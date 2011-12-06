@@ -27,9 +27,15 @@ public class CallActivity extends Activity {
         Bundle extras = getIntent().getExtras();
         String username = extras.getString("username");
         String myname = extras.getString("myname");
+        String serverAddress = extras.getString("serverAddress");
         
+        // information passed correctly here
+        Log.i("Connection Username", username);
+        Log.i("Client Username", myname);
+        Log.i("Server Address", serverAddress);
+        
+        // socket retrieved successfully 
         Socket _socket = (Socket) DirectoryClient.userSockets.get(myname);
-        Log.i("FUCKING SOCKET", _socket.toString());
         
         TextView tV = null;
         tV = (TextView) findViewById(R.id.callerName); 

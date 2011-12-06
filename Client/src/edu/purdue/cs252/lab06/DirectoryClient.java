@@ -14,7 +14,6 @@ public class DirectoryClient
 	public static HashMap<String, Object> userSockets = new HashMap<String, Object>();
 	private String _ipAddress;
     private int _port = 6900;    
-    private int _voicePort = 6901;
     
     private Socket _socket = null;
     
