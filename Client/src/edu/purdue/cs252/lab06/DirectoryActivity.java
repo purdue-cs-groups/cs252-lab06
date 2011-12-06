@@ -114,15 +114,7 @@ public class DirectoryActivity extends ListActivity
 					{
 						CALL_STATUS = 0;
 						
-						try
-						{
-							dc.hangUp(destinationIP);
-						}
-						catch (IOException e)
-						{
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						// FUCK OFF
 			        }
 				});
 				adb.show();
