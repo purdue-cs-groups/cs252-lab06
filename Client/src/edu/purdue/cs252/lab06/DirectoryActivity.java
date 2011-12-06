@@ -107,10 +107,10 @@ public class DirectoryActivity extends ListActivity
 		database.notifyDataSetChanged();
     }
     
-    private String senderIP = null;
+    //private String senderIP = null;
     public void displayIncomingCall(String username, String ipAddress)
     {
-    	senderIP = ipAddress;
+    	final String senderIP = ipAddress;
     	Log.i("Checkpoint", "Entered displayIncomingCall()...");
     	AlertDialog.Builder adb = new AlertDialog.Builder(DirectoryActivity.this);
 
