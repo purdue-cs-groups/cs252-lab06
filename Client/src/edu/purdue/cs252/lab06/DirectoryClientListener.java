@@ -6,6 +6,7 @@ import java.io.*;
 
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 public class DirectoryClientListener implements Runnable
 {    
@@ -30,6 +31,8 @@ public class DirectoryClientListener implements Runnable
 
             while((line = br.readLine()) != null)
             {
+            	Log.i("FUCK", line);
+            	
             	if (line.startsWith("<IncomingCall>"))
                 {
                     String username = br.readLine();

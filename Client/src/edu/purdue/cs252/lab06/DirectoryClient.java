@@ -152,9 +152,9 @@ public class DirectoryClient
         {
             PrintWriter out = new PrintWriter(_socket.getOutputStream(), true);
             
-            out.println("<HangUp>");
+            out.println("<Hangup>");
             out.println("<IPAddress>" + destinationIPAddress + "</IPAddress>");
-            out.println("</HangUp>");
+            out.println("</Hangup>");
         }
         catch (Exception ex)
         {
