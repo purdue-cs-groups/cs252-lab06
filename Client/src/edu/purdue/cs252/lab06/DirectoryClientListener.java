@@ -44,7 +44,7 @@ public class DirectoryClientListener implements Runnable
                     
                     _UIthread.sendMessage(msg);
                 }
-                else if (line.startsWith("<Hangup>"))
+            	else if (line.startsWith("<Hangup>"))
                 {
                 	Message msg = new Message();
                     msg.what = 2;
@@ -88,6 +88,17 @@ public class DirectoryClientListener implements Runnable
                     
                     _UIthread.sendMessage(msg);
                 }
+                else if (line.startsWith("<AcceptCall>"))
+                {
+                    String ipAddress = br.readLine();
+                    ipAddress = ipAddress.substring(11, ipAddress.length() - 12);
+                    
+                    Message msg = new Message();
+                    msg.what = 4;
+                    msg.obj = ipAddress;
+                    
+                    _UIthread.sendMessage(msg);
+                }                    
             }
             
             br.close();

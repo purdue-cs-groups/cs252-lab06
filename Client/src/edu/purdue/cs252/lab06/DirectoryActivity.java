@@ -92,8 +92,7 @@ public class DirectoryActivity extends ListActivity
 				adb.setNegativeButton("No", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which)
 					{
-						// THEN FUCK OFF
-						return;
+						dc.hangUp(destinationIP);
 			        }
 				});
 				adb.show();
@@ -153,6 +152,10 @@ public class DirectoryActivity extends ListActivity
     			{
     				displayBusy();
     			}
+    			else if (msg.what == 4)
+    			{
+    				acceptCall((String)msg.obj);
+    			}
     		}
     	};
     }
@@ -211,11 +214,36 @@ public class DirectoryActivity extends ListActivity
     
     public void displayHangup()
     {
-     // TODO: implement this method
+    	if (ringingDialog == null) return;
+    	
+    	ringingDialog.dismiss();
+    	
+    	AlertDialog.Builder adb = new AlertDialog.Builder(DirectoryActivity.this);
+		   
+		adb.setTitle("Busy");
+		adb.setMessage("The user that you tried to call is busy and declined to answer.");
+		adb.setPositiveButton("OK", null);
+		adb.show();
+    }
+    
+    public void acceptCall(String ipAddress)
+    {
+    	if (ringingDialog == null) return;
+    	
+    	ringingDialog.dismiss();
     }
     
     public void displayBusy()
     {
-     // TODO: implement this method
+		if (ringingDialog == null) return;
+    	
+    	ringingDialog.dismiss();
+    	
+    	AlertDialog.Builder adb = new AlertDialog.Builder(DirectoryActivity.this);
+		   
+		adb.setTitle("Busy");
+		adb.setMessage("The user that you tried to call is busy and declined to answer.");
+		adb.setPositiveButton("OK", null);
+		adb.show();
     }
 }
