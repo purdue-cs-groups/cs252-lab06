@@ -240,16 +240,18 @@ public class DirectoryActivity extends ListActivity
     {
     	CALL_STATUS = 2;
     	
+    	player = MediaPlayer.create(this, Settings.System.DEFAULT_RINGTONE_URI);
+    	
     	if (onPhone) {
-	    		try {
-					player.prepare();
-				} catch (IllegalStateException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+    		try {
+				player.prepare();
+			} catch (IllegalStateException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 	    		
 	    	try {
 	    		player.start();
