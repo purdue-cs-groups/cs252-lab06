@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,9 +13,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 
 public class DirectoryActivity extends ListActivity
 {
@@ -27,6 +31,9 @@ public class DirectoryActivity extends ListActivity
 	
 	private ArrayAdapter<String> database;
 	private ArrayList<String> usernames;
+	private ArrayList<User> users;
+	
+	private ProgressDialog ringingDialog = null;
 	
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -34,10 +41,64 @@ public class DirectoryActivity extends ListActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.directory);
         
+        users = new ArrayList<User>();
         usernames = new ArrayList<String>();
         database = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, usernames);
         
         setListAdapter(database);
+        
+        final ListView lv1 = getListView();
+        lv1.setTextFilterEnabled(true);
+        lv1.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> a, View v, int position, long id)
+			{
+				User target = null;
+				for (User u : users)
+				{
+					if (u.getUsername().equals(lv1.getItemAtPosition(position)))
+					{
+						target = u;						
+					}
+				}
+				
+				if (target == null) return;
+				
+				final String username = target.getUsername();
+				final String destinationIP = target.getIPAddress();
+				
+				AlertDialog.Builder adb = new AlertDialog.Builder(DirectoryActivity.this);
+				
+				adb.setTitle("Send Call");
+				adb.setMessage("Are you sure you want to call " + target.getUsername() + " at " + target.getIPAddress() + "?");
+				adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which)
+					{
+						try
+						{
+							dc.sendCall(destinationIP);
+							
+							ringingDialog = new ProgressDialog(DirectoryActivity.this);
+							ringingDialog.setTitle("Ringing");
+							ringingDialog.setMessage("Waiting for " + username + " to respond.");
+							ringingDialog.show();
+						}
+						catch (IOException e)
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+			        }
+				});
+				adb.setNegativeButton("No", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which)
+					{
+						// THEN FUCK OFF
+						return;
+			        }
+				});
+				adb.show();
+			}
+        }); 
         
         connectToServer();
     }
@@ -98,9 +159,12 @@ public class DirectoryActivity extends ListActivity
     
     public void updateDirectory(ArrayList<User> directory)
     {
-		usernames.clear();
+		users.clear();    	
+    	usernames.clear();
+    	
 		for (User u : directory)
 		{
+			users.add(u);
 			usernames.add(u.getUsername());
 		}
 		
@@ -114,7 +178,7 @@ public class DirectoryActivity extends ListActivity
     	Log.i("Checkpoint", "Entered displayIncomingCall()...");
     	AlertDialog.Builder adb = new AlertDialog.Builder(DirectoryActivity.this);
 
-		adb.setTitle(ipAddress);
+		adb.setTitle("Incoming Call");
 		adb.setMessage("You have an incoming call from " + username + " at " + ipAddress + ".");
 		adb.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which)
