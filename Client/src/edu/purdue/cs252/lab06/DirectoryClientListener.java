@@ -91,7 +91,7 @@ public class DirectoryClientListener implements Runnable
                     
                     _UIthread.sendMessage(msg);
                 }
-                else if (line.startsWith("<AcceptCall>"))
+                else if (line.startsWith("<Connect>"))
                 {
                     String ipAddress = br.readLine();
                     ipAddress = ipAddress.substring(11, ipAddress.length() - 12);

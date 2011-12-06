@@ -162,7 +162,7 @@ public class DirectoryActivity extends ListActivity
     			}
     			else if (msg.what == 4)
     			{
-    				acceptCall((String)msg.obj);
+    				connect((String)msg.obj);
     			}
     		}
     	};
@@ -234,7 +234,7 @@ public class DirectoryActivity extends ListActivity
 		adb.show();
     }
     
-    public void acceptCall(String ipAddress)
+    public void connect(String ipAddress)
     {
     	if (ringingDialog == null) return;
     	
