@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Server Address:"
-        android:textAppearance="?android:attr/textAppearanceLarge" android:padding="10px"/>
+        android:textAppearance="?android:attr/textAppearanceLarge" android:padding="10px" />
 
     <EditText
         android:id="@+id/editText1"
