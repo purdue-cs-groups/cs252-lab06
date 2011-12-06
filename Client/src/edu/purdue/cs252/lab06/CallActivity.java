@@ -28,7 +28,7 @@ public class CallActivity extends Activity {
         String username = extras.getString("username");
         String myname = extras.getString("myname");
         
-        Socket _socket = (Socket) DirectoryClient.fuckingSockets.get(myname);
+        Socket _socket = (Socket) DirectoryClient.userSockets.get(myname);
         Log.i("FUCKING SOCKET", _socket.toString());
         
         TextView tV = null;

@@ -11,7 +11,7 @@ import android.util.Log;
 
 public class DirectoryClient
 {    
-	public static HashMap<String, Object> fuckingSockets = new HashMap<String, Object>();
+	public static HashMap<String, Object> userSockets = new HashMap<String, Object>();
 	private String _ipAddress;
     private int _port = 6900;    
     private int _voicePort = 6901;
@@ -32,7 +32,7 @@ public class DirectoryClient
         {
         	_socket = new Socket(InetAddress.getByName(_ipAddress), _port);
         	
-        	fuckingSockets.put(username, _socket);
+        	userSockets.put(username, _socket);
          	
         	// initialize keep-alive client 
             HeartbeatClient hc = new HeartbeatClient(_socket);
