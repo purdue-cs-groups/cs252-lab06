@@ -36,6 +36,8 @@ public class DirectoryActivity extends ListActivity
 	private AlertDialog incomingDialog = null; 
 	private ProgressDialog ringingDialog = null;
 	
+	private int CALL_STATUS = 0; // 0 = idle, 1 = place call, 2 = receive call, 3 = in call
+	
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -74,6 +76,8 @@ public class DirectoryActivity extends ListActivity
 				adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which)
 					{
+						CALL_STATUS = 1;
+						
 						try
 						{
 							dc.sendCall(destinationIP);
@@ -108,6 +112,8 @@ public class DirectoryActivity extends ListActivity
 				adb.setNegativeButton("No", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which)
 					{
+						CALL_STATUS = 0;
+						
 						try
 						{
 							dc.hangUp(destinationIP);
@@ -201,6 +207,8 @@ public class DirectoryActivity extends ListActivity
     //private String senderIP = null;
     public void displayIncomingCall(String username, String ipAddress)
     {
+    	CALL_STATUS = 2;
+    	
     	final String senderIP = ipAddress;
     	Log.i("Checkpoint", "Entered displayIncomingCall()...");
     	AlertDialog.Builder adb = new AlertDialog.Builder(DirectoryActivity.this);
@@ -210,12 +218,14 @@ public class DirectoryActivity extends ListActivity
     	adb.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which)
 			{
-				// TODO: implement this action
-				Log.i("Value Validation", "Sender IP: " + senderIP);
+				CALL_STATUS = 3;
 					
-				try {
+				try
+				{
 					dc.acceptCall(senderIP);
-				} catch (IOException e) {
+				}
+				catch (IOException e)
+				{
 					// TODO Auto-generated catch block
 				}
 	        }
@@ -223,12 +233,14 @@ public class DirectoryActivity extends ListActivity
     	adb.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which)
 			{
-				// TODO: implement this action
-				Log.i("Value Validation", "Sender IP: " + senderIP);
+				CALL_STATUS = 0;
 				
-				try {
+				try
+				{
 					dc.hangUp(senderIP);
-				} catch (IOException e) {
+				}
+				catch (IOException e)
+				{
 					// TODO Auto-generated catch block
 				}
 	        }
@@ -250,16 +262,19 @@ public class DirectoryActivity extends ListActivity
 	    	ringingDialog.dismiss();
     	}
     	
-    	AlertDialog.Builder adb = new AlertDialog.Builder(DirectoryActivity.this);
-		   
-		adb.setTitle("Busy");
-		adb.setMessage("The user that you tried to call is busy and declined to answer.");
-		adb.setPositiveButton("OK", null);
-		adb.show();
+    	if (CALL_STATUS == 1)
+    	{
+	    	AlertDialog.Builder adb = new AlertDialog.Builder(DirectoryActivity.this);
+			   
+			adb.setTitle("Busy");
+			adb.setMessage("The user that you tried to call is busy and declined to answer.");
+			adb.setPositiveButton("OK", null);
+			adb.show();
+    	}
     }
     
     public void connect(String ipAddress)
-    {
+    {    	
     	if (incomingDialog != null)
     	{    	
     		incomingDialog.dismiss();
@@ -269,6 +284,14 @@ public class DirectoryActivity extends ListActivity
     	{    	
 	    	ringingDialog.dismiss();
     	}
+    	
+    	// Intent i = new Intent(DirectoryActivity.this, CallActivity.class);
+		// i.putExtra("serverAddress", ipAddress.toString());
+		// i.putExtra("username", "STEVE JOBS");
+		
+		// startActivity(i);
+
+    	CALL_STATUS = 3;
     }
     
     public void displayBusy()
@@ -283,11 +306,16 @@ public class DirectoryActivity extends ListActivity
 	    	ringingDialog.dismiss();
     	}
     	
-    	AlertDialog.Builder adb = new AlertDialog.Builder(DirectoryActivity.this);
-		   
-		adb.setTitle("Busy");
-		adb.setMessage("The user that you tried to call is busy and declined to answer.");
-		adb.setPositiveButton("OK", null);
-		adb.show();
+    	if (CALL_STATUS == 1)
+    	{
+	    	AlertDialog.Builder adb = new AlertDialog.Builder(DirectoryActivity.this);
+			   
+			adb.setTitle("Busy");
+			adb.setMessage("The user that you tried to call is busy and declined to answer.");
+			adb.setPositiveButton("OK", null);
+			adb.show();
+    	}
+
+    	CALL_STATUS = 0;
     }
 }
