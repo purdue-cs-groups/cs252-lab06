@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -285,8 +286,9 @@ public class DirectoryActivity extends ListActivity
     	}
     	
     	Intent i = new Intent(DirectoryActivity.this, CallActivity.class);
+    	i.putExtra("DirectoryClient", (Parcelable)dc);
 		i.putExtra("serverAddress", ipAddress.toString());
-		i.putExtra("username", username);
+		i.putExtra("username", otherUsername);
 		
 		startActivity(i);
 
