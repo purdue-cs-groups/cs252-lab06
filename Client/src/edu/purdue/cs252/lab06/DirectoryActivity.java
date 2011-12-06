@@ -8,10 +8,12 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,6 +25,7 @@ import android.widget.ListView;
 
 public class DirectoryActivity extends ListActivity 
 {
+	boolean onPhone = false;  // CHANGE THIS IF USING EMULATOR
 	String serverAddress;
 	String username;
 	
@@ -218,6 +221,27 @@ public class DirectoryActivity extends ListActivity
     {
     	CALL_STATUS = 2;
     	
+    	final MediaPlayer player = MediaPlayer.create(this,
+    		    Settings.System.DEFAULT_RINGTONE_URI);
+    	
+    	if (onPhone) {
+	    		try {
+					player.prepare();
+				} catch (IllegalStateException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+	    		
+	    	try {
+	    		player.start();
+	    	} catch (Exception e) {
+	    		Log.i("Ringtone", e.getMessage());
+	    	}
+    	}
+    	
     	final String username = userName;
     	final String senderIP = ipAddress;
     	
@@ -240,6 +264,9 @@ public class DirectoryActivity extends ListActivity
 				{
 					// TODO Auto-generated catch block
 				}
+				
+				if (onPhone)
+					player.stop();
 	        }
 		});
     	adb.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
@@ -255,6 +282,9 @@ public class DirectoryActivity extends ListActivity
 				{
 					// TODO Auto-generated catch block
 				}
+				
+				if (onPhone)
+					player.stop();
 	        }
 		});
     	
