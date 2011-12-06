@@ -298,7 +298,7 @@ public class DirectoryActivity extends ListActivity
     	}
     	
     	Intent i = new Intent(DirectoryActivity.this, CallActivity.class);
-    	i.putExtra("DirectoryClient", (Parcelable)dc);
+    	// i.putExtra("DirectoryClient", (Parcelable)dc);
 		i.putExtra("serverAddress", ipAddress.toString());
 		i.putExtra("username", otherUsername);
 		
