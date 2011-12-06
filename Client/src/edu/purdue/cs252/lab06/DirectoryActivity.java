@@ -21,7 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-public class DirectoryActivity extends ListActivity
+public class DirectoryActivity extends ListActivity 
 {
 	String serverAddress;
 	String username;
@@ -154,7 +154,7 @@ public class DirectoryActivity extends ListActivity
         	
             dc = new DirectoryClient(serverAddress, UIhandler);
               
-            dc.connect();
+            dc.connect(username);
             dc.addUser(username);
         }
         catch (Exception ex)
@@ -298,9 +298,9 @@ public class DirectoryActivity extends ListActivity
     	}
     	
     	Intent i = new Intent(DirectoryActivity.this, CallActivity.class);
-    	// i.putExtra("DirectoryClient", (Parcelable)dc);
 		i.putExtra("serverAddress", ipAddress.toString());
 		i.putExtra("username", otherUsername);
+		i.putExtra("myname", username);
 		
 		startActivity(i);
 

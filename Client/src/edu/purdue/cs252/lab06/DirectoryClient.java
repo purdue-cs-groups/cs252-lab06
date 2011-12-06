@@ -7,11 +7,14 @@ import java.io.*;
 import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
-public class DirectoryClient implements Parcelable
+public class DirectoryClient
 {    
-    private String _ipAddress;
+	public static HashMap<String, Object> fuckingSockets = new HashMap<String, Object>();
+	private String _ipAddress;
     private int _port = 6900;    
+    private int _voicePort = 6901;
     
     private Socket _socket = null;
     
@@ -23,11 +26,13 @@ public class DirectoryClient implements Parcelable
         _UIthread = UIthread;
     }
     
-    public boolean connect()
+    public boolean connect(String username)
     {            
         try
         {
         	_socket = new Socket(InetAddress.getByName(_ipAddress), _port);
+        	
+        	fuckingSockets.put(username, _socket);
          	
         	// initialize keep-alive client 
             HeartbeatClient hc = new HeartbeatClient(_socket);
@@ -165,17 +170,5 @@ public class DirectoryClient implements Parcelable
         
         return true;
     }
-
-	@Override
-	public int describeContents() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void writeToParcel(Parcel arg0, int arg1) {
-		// TODO Auto-generated method stub
-		
-	}
 }
 
