@@ -26,6 +26,9 @@ import android.widget.ListView;
 public class DirectoryActivity extends ListActivity 
 {
 	boolean onPhone = false;  // CHANGE THIS IF USING EMULATOR
+	final MediaPlayer player = MediaPlayer.create(this,
+		    Settings.System.DEFAULT_RINGTONE_URI);	
+	
 	String serverAddress;
 	String username;
 	
@@ -37,6 +40,7 @@ public class DirectoryActivity extends ListActivity
 	private ArrayList<String> usernames;
 	private ArrayList<User> users;
 	
+	private String myUsername;
 	private String otherUsername;
 	
 	private AlertDialog incomingDialog = null; 
@@ -81,6 +85,18 @@ public class DirectoryActivity extends ListActivity
 					   
 					adb.setTitle("Send Call");
 					adb.setMessage("The user that you are trying to call is busy and cannot be called.");
+					adb.setPositiveButton("OK", null);
+					adb.show();
+					
+					return;
+				}
+				
+				if (target.getUsername().equals(myUsername))
+				{
+					AlertDialog.Builder adb = new AlertDialog.Builder(DirectoryActivity.this);
+					   
+					adb.setTitle("Send Call");
+					adb.setMessage("You are not allowed to call yourself.");
 					adb.setPositiveButton("OK", null);
 					adb.show();
 					
@@ -156,7 +172,9 @@ public class DirectoryActivity extends ListActivity
         	setupHandler();
         	
             dc = new DirectoryClient(serverAddress, UIhandler);
-              
+            
+            myUsername = username;
+            
             dc.connect(username);
             dc.addUser(username);
         }
@@ -220,9 +238,6 @@ public class DirectoryActivity extends ListActivity
     public void displayIncomingCall(String userName, String ipAddress)
     {
     	CALL_STATUS = 2;
-    	
-    	final MediaPlayer player = MediaPlayer.create(this,
-    		    Settings.System.DEFAULT_RINGTONE_URI);
     	
     	if (onPhone) {
 	    		try {
@@ -296,7 +311,8 @@ public class DirectoryActivity extends ListActivity
     {
     	if (incomingDialog != null)
     	{    	
-    		incomingDialog.dismiss();
+    		incomingDialog.dismiss();    		
+    		if (onPhone) player.stop();
     	}
     	
     	if (ringingDialog != null)
@@ -320,6 +336,7 @@ public class DirectoryActivity extends ListActivity
     	if (incomingDialog != null)
     	{    	
     		incomingDialog.dismiss();
+    		if (onPhone) player.stop();
     	}
     	
     	if (ringingDialog != null)
@@ -342,6 +359,7 @@ public class DirectoryActivity extends ListActivity
     	if (incomingDialog != null)
     	{    	
     		incomingDialog.dismiss();
+    		if (onPhone) player.stop();
     	}
     	
     	if (ringingDialog != null)

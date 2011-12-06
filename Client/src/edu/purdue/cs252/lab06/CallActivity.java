@@ -35,7 +35,7 @@ public class CallActivity extends Activity {
         Log.i("Server Address", serverAddress);
         
         // socket retrieved successfully 
-        Socket _socket = (Socket) DirectoryClient.userSockets.get(myname);
+        // socket is available at `DirectoryClient._socket;`
         
         TextView tV = null;
         tV = (TextView) findViewById(R.id.callerName); 
