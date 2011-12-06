@@ -5,8 +5,10 @@ import java.net.*;
 import java.io.*;
 
 import android.os.Handler;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class DirectoryClient
+public class DirectoryClient implements Parcelable
 {    
     private String _ipAddress;
     private int _port = 6900;    
@@ -163,5 +165,17 @@ public class DirectoryClient
         
         return true;
     }
+
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel arg0, int arg1) {
+		// TODO Auto-generated method stub
+		
+	}
 }
 

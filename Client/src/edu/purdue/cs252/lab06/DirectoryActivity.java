@@ -72,6 +72,18 @@ public class DirectoryActivity extends ListActivity
 				final String username = target.getUsername();
 				final String destinationIP = target.getIPAddress();
 				
+				if (target.getStatus().equals("Busy"))
+				{
+					AlertDialog.Builder adb = new AlertDialog.Builder(DirectoryActivity.this);
+					   
+					adb.setTitle("Send Call");
+					adb.setMessage("The user that you are trying to call is busy and cannot be called.");
+					adb.setPositiveButton("OK", null);
+					adb.show();
+					
+					return;
+				}
+				
 				AlertDialog.Builder adb = new AlertDialog.Builder(DirectoryActivity.this);
 				
 				adb.setTitle("Send Call");
