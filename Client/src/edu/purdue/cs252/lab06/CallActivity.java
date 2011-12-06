@@ -9,15 +9,21 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
 
-public class CallActivity extends Activity {
+public class CallActivity extends Activity
+{
+	Handler UIhandler;
+	
 	@Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -26,19 +32,53 @@ public class CallActivity extends Activity {
         
         Bundle extras = getIntent().getExtras();
         String username = extras.getString("username");
-        String myname = extras.getString("myname");
+        final String userAddress = extras.getString("userAddress");
         String serverAddress = extras.getString("serverAddress");
         
-        // information passed correctly here
-        Log.i("Connection Username", username);
-        Log.i("Client Username", myname);
-        Log.i("Server Address", serverAddress);
-        
-        // socket retrieved successfully 
-        // socket is available at `DirectoryClient._socket;`
+        Button btn = null;
+        btn = (Button) findViewById(R.id.widget33); 
+        btn.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v)
+			{
+				DirectoryClient dc = new DirectoryClient(DirectoryClient._socket, UIhandler);
+				
+				try
+				{
+					dc.hangUp(userAddress);
+					displayHangup();
+				}
+				catch (IOException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+        });
         
         TextView tV = null;
         tV = (TextView) findViewById(R.id.callerName); 
         tV.setText(username);
+        
+        setupHandler();
+        
+        // socket is available at `DirectoryClient._socket;`
+    }
+	
+	public void setupHandler()
+    {
+    	UIhandler = new Handler() {    		
+    		public void handleMessage(Message msg)
+    		{
+    			if (msg.what == 2)
+    			{
+    				displayHangup();
+    			}
+    		}
+    	};
+    }
+	
+	public void displayHangup()
+    {
+    	finish();
     }
 }

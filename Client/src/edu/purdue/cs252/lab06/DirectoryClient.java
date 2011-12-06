@@ -18,6 +18,14 @@ public class DirectoryClient
     
     private Handler _UIthread;
     
+    public DirectoryClient(Socket socket, Handler UIthread)
+    {
+    	_ipAddress = _socket.getInetAddress().toString();
+    	_UIthread = UIthread;
+    	
+    	_socket = socket;
+    }
+    
     public DirectoryClient(String ipAddress, Handler UIthread)
     {
         _ipAddress = ipAddress;

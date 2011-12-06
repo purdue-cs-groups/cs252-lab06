@@ -163,7 +163,6 @@ public class DirectoryActivity extends ListActivity
     
     public void connectToServer()
     {
-    	Log.i("Checkpoint", "Entered connectToServer()...");
     	Bundle extras = getIntent().getExtras();
     	serverAddress = extras.getString("serverAddress");
     	username = extras.getString("username");
@@ -347,10 +346,21 @@ public class DirectoryActivity extends ListActivity
 	    	ringingDialog.dismiss();
     	}
     	
+    	User target = null;
+    	for (User u : users)
+		{
+			if (otherUsername.equals(u.getUsername()))
+			{
+				target = u;
+				break;
+			}
+		}
+    	
     	Intent i = new Intent(DirectoryActivity.this, CallActivity.class);
 		i.putExtra("serverAddress", ipAddress.toString());
 		i.putExtra("username", otherUsername);
 		i.putExtra("myname", username);
+		i.putExtra("userAddress", target.getUsername());
 		
 		startActivity(i);
 
