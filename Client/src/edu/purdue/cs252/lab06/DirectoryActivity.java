@@ -92,7 +92,15 @@ public class DirectoryActivity extends ListActivity
 				adb.setNegativeButton("No", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which)
 					{
-						dc.hangUp(destinationIP);
+						try
+						{
+							dc.hangUp(destinationIP);
+						}
+						catch (IOException e)
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 			        }
 				});
 				adb.show();
