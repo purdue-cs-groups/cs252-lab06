@@ -360,7 +360,7 @@ public class DirectoryActivity extends ListActivity
 		i.putExtra("serverAddress", ipAddress.toString());
 		i.putExtra("username", otherUsername);
 		i.putExtra("myname", username);
-		i.putExtra("userAddress", target.getUsername());
+		i.putExtra("userAddress", target.getIPAddress());
 		
 		startActivity(i);
 
