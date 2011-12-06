@@ -33,6 +33,8 @@ public class DirectoryActivity extends ListActivity
 	private ArrayList<String> usernames;
 	private ArrayList<User> users;
 	
+	private String otherUsername;
+	
 	private AlertDialog incomingDialog = null; 
 	private ProgressDialog ringingDialog = null;
 	
@@ -81,6 +83,8 @@ public class DirectoryActivity extends ListActivity
 						try
 						{
 							dc.sendCall(destinationIP);
+							
+							otherUsername = username;
 							
 							ringingDialog = new ProgressDialog(DirectoryActivity.this);
 							ringingDialog.setTitle("Ringing");
@@ -197,21 +201,24 @@ public class DirectoryActivity extends ListActivity
     }
     
     //private String senderIP = null;
-    public void displayIncomingCall(String username, String ipAddress)
+    public void displayIncomingCall(String userName, String ipAddress)
     {
     	CALL_STATUS = 2;
     	
+    	final String username = userName;
     	final String senderIP = ipAddress;
-    	Log.i("Checkpoint", "Entered displayIncomingCall()...");
+    	
     	AlertDialog.Builder adb = new AlertDialog.Builder(DirectoryActivity.this);
 
     	adb.setTitle("Incoming Call");
-    	adb.setMessage("You have an incoming call from " + username + " at " + ipAddress + ".");
+    	adb.setMessage("You have an incoming call from " + userName + " at " + ipAddress + ".");
     	adb.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which)
 			{
 				CALL_STATUS = 3;
 					
+				otherUsername = username;
+				
 				try
 				{
 					dc.acceptCall(senderIP);
@@ -277,11 +284,11 @@ public class DirectoryActivity extends ListActivity
 	    	ringingDialog.dismiss();
     	}
     	
-    	// Intent i = new Intent(DirectoryActivity.this, CallActivity.class);
-		// i.putExtra("serverAddress", ipAddress.toString());
-		// i.putExtra("username", "STEVE JOBS");
+    	Intent i = new Intent(DirectoryActivity.this, CallActivity.class);
+		i.putExtra("serverAddress", ipAddress.toString());
+		i.putExtra("username", username);
 		
-		// startActivity(i);
+		startActivity(i);
 
     	CALL_STATUS = 3;
     }
