@@ -26,8 +26,7 @@ import android.widget.ListView;
 public class DirectoryActivity extends ListActivity 
 {
 	boolean onPhone = false;  // CHANGE THIS IF USING EMULATOR
-	final MediaPlayer player = MediaPlayer.create(this,
-		    Settings.System.DEFAULT_RINGTONE_URI);	
+	MediaPlayer player;
 	
 	String serverAddress;
 	String username;
@@ -53,6 +52,8 @@ public class DirectoryActivity extends ListActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.directory);
+        
+        player = MediaPlayer.create(this, Settings.System.DEFAULT_RINGTONE_URI);	
         
         users = new ArrayList<User>();
         usernames = new ArrayList<String>();
