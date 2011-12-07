@@ -40,7 +40,7 @@ public class VoiceServer implements Runnable
                 VoiceServerConnection target = null;
                 for (VoiceServerConnection c : _connections)
                 {
-                    if ((c.getIPAddress() == ipAddress) &&
+                    if ((c.getIPAddress().toString(ipAddress)) &&
                         (c.getPort() == port))
                     {
                         target = c;
@@ -59,8 +59,7 @@ public class VoiceServer implements Runnable
                 {
                     try
                     {
-                        if ((c.getIPAddress() != ipAddress) ||
-                            (c.getPort() != port)) // we don't need to hear our own audio
+                        if (!(c.getIPAddress().toString(ipAddress))) // we don't need to hear our own audio
                         {
                             DatagramPacket sendPacket = new DatagramPacket(buffer, buffer.length, c.getIPAddress(), c.getPort());
                             serverSocket.send(sendPacket);
