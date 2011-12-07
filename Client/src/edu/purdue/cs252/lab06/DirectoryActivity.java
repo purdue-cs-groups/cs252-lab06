@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -206,6 +207,11 @@ public class DirectoryActivity extends ListActivity
     			}
     			else if (msg.what == 2)
     			{
+    				Log.i("DirectoryActivity", "Got the hangup");
+    				
+    				// send intent
+    				sendBroadcast();
+    				
     				displayHangup();
     			}
     			else if (msg.what == 3)
@@ -218,6 +224,13 @@ public class DirectoryActivity extends ListActivity
     			}
     		}
     	};
+    }
+    
+    public void sendBroadcast() {
+    	Intent i = new Intent();
+        i.setAction("hangup.the.fucking.phone");
+        sendBroadcast(i);
+        Log.i("DirectoryActivity", "Sent the Intent");
     }
     
     public void updateDirectory(ArrayList<User> directory)

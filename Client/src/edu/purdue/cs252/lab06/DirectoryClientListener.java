@@ -4,6 +4,8 @@ import java.util.*;
 import java.net.*;
 import java.io.*;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -52,7 +54,7 @@ public class DirectoryClientListener implements Runnable
                 	Message msg = new Message();
                     msg.what = 2;
                     
-                    _UIthread.sendMessage(msg);
+                    _UIthread.sendMessage(msg);                  
                 }
                 else if (line.startsWith("<Busy>"))
                 {
