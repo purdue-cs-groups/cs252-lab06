@@ -12,7 +12,7 @@ import android.util.Log;
 public class DirectoryClient
 {    
 	private String _ipAddress;
-    private int _port = 6900;    
+    private int _port = 7900;    
     
     public static Socket _socket = null;
     

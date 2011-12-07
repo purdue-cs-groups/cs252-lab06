@@ -81,9 +81,9 @@ public class CallActivity extends Activity
     	Thread t1 = new Thread(vr);  
     	t1.start();
     	
-    	VoicePlayer vp = new VoicePlayer(serverAddress);
-		Thread t2 = new Thread(vp);  
-		t2.start();
+    	//VoicePlayer vp = new VoicePlayer(serverAddress);
+		//Thread t2 = new Thread(vp);  
+		//t2.start();
 	}
 	
 	public void setupHandler()
