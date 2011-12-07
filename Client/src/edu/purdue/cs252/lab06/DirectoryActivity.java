@@ -375,6 +375,10 @@ public class DirectoryActivity extends ListActivity
 		i.putExtra("myname", username);
 		i.putExtra("userAddress", target.getIPAddress());
 		
+	   	VoicePlayer vp = new VoicePlayer("lore.cs.purdue.edu");
+				Thread t2 = new Thread(vp);  
+				t2.start();
+		
 		startActivity(i);
 
     	CALL_STATUS = 3;

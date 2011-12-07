@@ -1,4 +1,4 @@
-package edu.purdue.cs252.lab06;
+package com.cs252.lab06;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -12,17 +12,17 @@ import android.os.Handler;
 import android.util.Log;
 
 
-public class VoiceRecorder implements Runnable {
+public class voiceRecorder implements Runnable {
 	private int sampleRate = 8000;
 	private int channelConfig = AudioFormat.CHANNEL_CONFIGURATION_MONO;
 	private int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
 	private DatagramSocket socket;
 	static boolean onCall = false;
 
-	VoiceRecorder(String server) {
+	voiceRecorder(String server) {
 		try {
-			this.socket = new DatagramSocket(7901);
-	 
+			this.socket = new DatagramSocket(8891);
+
 			
 		} catch (SocketException e) { System.out.println("constructor " + e.getMessage());	}  
 	}
@@ -39,14 +39,13 @@ public class VoiceRecorder implements Runnable {
 			while(true) {
 				try {
 					
-					byte[] buffer = new byte[1024] ;
+					byte[] buffer = new byte[1] ;
 					recorder.read(buffer,0,buffer.length);
-					packet = new DatagramPacket(buffer,buffer.length,InetAddress.getByName("lore.cs.purdue.edu"),7901);
+					packet = new DatagramPacket(buffer,buffer.length,InetAddress.getByName("lore.cs.purdue.edu"),8891);
 	
 					socket.send(packet);
 				} catch (Exception e) {
 					System.out.println("in voice recorder run() " + e.getMessage());
-					
 				}
 			}
 		} catch (Exception e1) {

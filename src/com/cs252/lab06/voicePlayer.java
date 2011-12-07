@@ -1,17 +1,14 @@
-package edu.purdue.cs252.lab06;
-
+package com.cs252.lab06;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.net.UnknownHostException;
-
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 
-public class VoicePlayer implements  Runnable{
+public class voicePlayer implements  Runnable{
 	
 	private int sampleRate = 8000;
 	private int channelConfig = AudioFormat.CHANNEL_CONFIGURATION_MONO;
@@ -19,9 +16,9 @@ public class VoicePlayer implements  Runnable{
 	private DatagramSocket socket;
 	private AudioTrack speaker;
 	
-	VoicePlayer(String server) {
+	voicePlayer(String server) {
 		try {
-			this.socket = new DatagramSocket(7901);
+			this.socket = new DatagramSocket(8891);
 
 		} catch (SocketException e) {
 			System.out.printf("Socket Exception!");
@@ -33,22 +30,21 @@ public class VoicePlayer implements  Runnable{
 		int minBuf = AudioTrack.getMinBufferSize(sampleRate, channelConfig, audioFormat);
 		speaker = new AudioTrack(AudioManager.STREAM_VOICE_CALL, sampleRate, channelConfig, audioFormat, minBuf, AudioTrack.MODE_STREAM);
 		speaker.play();
-		byte[] buffer = new byte[1024];
+		byte[] buffer = new byte[1];
 		DatagramPacket dummyPacket = null;
 		DatagramPacket packet;
-		InetAddress serverAddr = null;
-		try {
-			serverAddr = InetAddress.getByName("lore.cs.purdue.edu");
-		} catch (UnknownHostException e1) {
-		}
-		byte[] dummyBuf = new byte[1];
-		dummyBuf[0] = 0;
-		dummyPacket = new DatagramPacket(dummyBuf, dummyBuf.length, serverAddr, 7901);
 		
 		while(true) {
 			try {
-				socket.send(dummyPacket);
+				final InetAddress serverAddr = InetAddress.getByName("lore.cs.purdue.edu");
+				
+				byte[] dummyBuf = new byte[1];
+				dummyBuf[0] = 0;
+				
+				dummyPacket = new DatagramPacket(dummyBuf, dummyBuf.length, serverAddr, 8891);
 				packet = new DatagramPacket(buffer, buffer.length);
+
+				socket.send(dummyPacket);
 				socket.receive(packet);
 
 				buffer = packet.getData();
