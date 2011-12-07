@@ -228,7 +228,7 @@ public class DirectoryActivity extends ListActivity
     
     public void sendBroadcast() {
     	Intent i = new Intent();
-        i.setAction("hangup.the.fucking.phone");
+        i.setAction("hangup.the.phone");
         sendBroadcast(i);
         Log.i("DirectoryActivity", "Sent the Intent");
     }

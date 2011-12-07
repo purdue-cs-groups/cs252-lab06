@@ -84,10 +84,6 @@ public class CallActivity extends Activity
     	
     	Log.i("CallActivity", this.toString());
     	CallReceiver cr = new CallReceiver(UIhandler);
-    	
-    	/*IntentFilter filter = new IntentFilter();
-        filter.addAction("hangup.the.fucking.phone");
-        registerReceiver(cr, filter);*/
     }
 	
 	public void displayHangup()

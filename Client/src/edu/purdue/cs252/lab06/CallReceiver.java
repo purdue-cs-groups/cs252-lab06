@@ -28,7 +28,7 @@ public class CallReceiver extends BroadcastReceiver {
 	public void onReceive(Context c, Intent i) {
 		String action = i.getAction();
 		
-		if (action.equals("hangup.the.fucking.phone")) {
+		if (action.equals("hangup.the.phone")) {
 			
 			if (CallActivity.UIhandler != null)
 				Log.i("CallReceiver", "Received the Intent: " + CallActivity.UIhandler.toString());

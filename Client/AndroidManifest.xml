@@ -14,7 +14,7 @@
         
         <receiver android:name="CallReceiver">
 			<intent-filter>
-				<action android:name="hangup.the.fucking.phone"></action>
+				<action android:name="hangup.the.phone"></action>
 			</intent-filter>
 		</receiver>
 		
