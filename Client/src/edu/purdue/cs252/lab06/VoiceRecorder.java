@@ -47,8 +47,8 @@ public class VoiceRecorder implements Runnable
 			{
 				try
 				{
-					byte[] buffer = new byte[2048];
-					recorder.read(buffer,0,buffer.length);
+					byte[] buffer = new byte[50];
+					recorder.read(buffer, 0, buffer.length);
 					packet = new DatagramPacket(buffer, buffer.length, InetAddress.getByName(_server), 6901);
 	
 					socket.send(packet);

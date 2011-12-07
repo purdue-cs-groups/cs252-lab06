@@ -37,7 +37,7 @@ public class VoicePlayer implements Runnable
 		speaker = new AudioTrack(AudioManager.STREAM_VOICE_CALL, sampleRate, channelConfig, audioFormat, minBuf, AudioTrack.MODE_STREAM);
 		speaker.play();
 		
-		byte[] buffer = new byte[2048];
+		byte[] buffer = new byte[50];
 		DatagramPacket dummyPacket = null;
 		DatagramPacket packet;
 		
