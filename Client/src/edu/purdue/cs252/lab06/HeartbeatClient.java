@@ -1,4 +1,4 @@
-package com.cs252.lab06;
+package edu.purdue.cs252.lab06;
 
 import java.io.*; 
 import java.net.*;
@@ -38,3 +38,4 @@ public class HeartbeatClient implements Runnable
         }
     }
 }
+

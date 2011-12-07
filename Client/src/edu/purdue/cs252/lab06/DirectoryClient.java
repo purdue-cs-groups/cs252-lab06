@@ -1,45 +1,62 @@
-package com.cs252.lab06;
+package edu.purdue.cs252.lab06;
 
 import java.util.*;
 import java.net.*;
 import java.io.*;
 
+import android.os.Handler;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.util.Log;
+
 public class DirectoryClient
 {    
-    private String _ipAddress;
+	private String _ipAddress;
     private int _port = 6900;    
     
-    private Socket _socket = null;
+    public static Socket _socket = null;
     
-    private DirectoryScreen _UIthread;
+    private Handler _UIthread;
     
-    public DirectoryClient(String ipAddress, DirectoryScreen UIthread)
+    public DirectoryClient(Socket socket, Handler UIthread)
+    {
+    	_ipAddress = _socket.getInetAddress().toString();
+    	_UIthread = UIthread;
+    	
+    	_socket = socket;
+    }
+    
+    public DirectoryClient(String ipAddress, Handler UIthread)
     {
         _ipAddress = ipAddress;
         _UIthread = UIthread;
     }
     
-    public boolean connect()
+    public boolean connect(String username)
     {            
         try
         {
         	_socket = new Socket(InetAddress.getByName(_ipAddress), _port);
-         	
+        	
         	// initialize keep-alive client 
             HeartbeatClient hc = new HeartbeatClient(_socket);
             
-            Thread t1 = new Thread(hc);
+            Thread t1 = new Thread(hc, "HeartbeatClient");
             t1.start();
             
             // initialize listener
             DirectoryClientListener dcl = new DirectoryClientListener(_socket, _UIthread);
             
-            Thread t2 = new Thread(dcl);
+            Thread t2 = new Thread(dcl, "DirectoryClientListener");
             t2.start();
+            
+            System.out.println("DirectoryClientListener running on thread " + t2.getId());
         }
         catch (Exception ex)
         {
-            return false;
+            System.out.println(ex.getMessage());
+        	
+        	return false;
         }
         
         return true;
@@ -89,7 +106,7 @@ public class DirectoryClient
         return true;
     }
     
-    public boolean sendCall(int destinationIPAddress) throws IOException
+    public boolean sendCall(String destinationIPAddress) throws IOException
     {
         if (_socket == null)
         {
@@ -112,7 +129,7 @@ public class DirectoryClient
         return true;
     }
     
-    public boolean hangUp(int destinationIPAddress) throws IOException
+    public boolean acceptCall(String destinationIPAddress) throws IOException
     {
         if (_socket == null)
         {
@@ -123,9 +140,32 @@ public class DirectoryClient
         {
             PrintWriter out = new PrintWriter(_socket.getOutputStream(), true);
             
-            out.println("<HangUp>");
+            out.println("<AcceptCall>");
             out.println("<IPAddress>" + destinationIPAddress + "</IPAddress>");
-            out.println("</HangUp>");
+            out.println("</AcceptCall>");
+        }
+        catch (Exception ex)
+        {
+            return false;
+        } 
+        
+        return true;
+    }
+    
+    public boolean hangUp(String destinationIPAddress) throws IOException
+    {
+        if (_socket == null)
+        {
+            throw new IOException("Not connected to server.");
+        }
+        
+        try
+        {
+            PrintWriter out = new PrintWriter(_socket.getOutputStream(), true);
+            
+            out.println("<Hangup>");
+            out.println("<IPAddress>" + destinationIPAddress + "</IPAddress>");
+            out.println("</Hangup>");
         }
         catch (Exception ex)
         {
@@ -135,3 +175,4 @@ public class DirectoryClient
         return true;
     }
 }
+

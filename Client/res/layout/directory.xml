@@ -8,17 +8,6 @@
         android:id="@+id/android:list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.90" >
-
-    </ListView>
-
-
-
-
-    <Button
-        android:id="@+id/select"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Button" />
+        android:layout_weight="0.90" />
 	
 </LinearLayout>

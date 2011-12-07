@@ -1,4 +1,5 @@
-package com.cs252.lab06;
+package edu.purdue.cs252.lab06;
+import java.util.*;
 
 public class User
 {
@@ -33,3 +34,4 @@ public class User
         _status = value;
     }
 }
+

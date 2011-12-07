@@ -1,15 +1,21 @@
-package com.cs252.lab06;
+package edu.purdue.cs252.lab06;
 
 import java.util.*;
 import java.net.*;
 import java.io.*;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+
 public class DirectoryClientListener implements Runnable
 {    
     private Socket _clientSocket = null;
-    private DirectoryScreen _UIthread;
+    private Handler _UIthread;
     
-    DirectoryClientListener(Socket clientSocket, DirectoryScreen UIthread)
+    DirectoryClientListener(Socket clientSocket, Handler UIthread)
     {
         _clientSocket = clientSocket;
         _UIthread = UIthread;
@@ -17,8 +23,6 @@ public class DirectoryClientListener implements Runnable
     
     public void run()
     {
-        System.out.println("Client listener starts running.");
-        
         try
         {            
             // load in the stream data
@@ -28,33 +32,37 @@ public class DirectoryClientListener implements Runnable
             String line;
 
             while((line = br.readLine()) != null)
-            {                
-                // IncomingCall request
-                if (line.startsWith("<IncomingCall>"))
+            {
+            	Log.i("FUCK", line);
+            	
+            	if (line.startsWith("<IncomingCall>"))
                 {
                     String username = br.readLine();
-                    username = username.substring(10,username.length() - 11);
-                    String ipAddress = br.readLine();
-                    ipAddress = ipAddress.substring(11,ipAddress.length() - 11);
+                    username = username.substring(10, username.length() - 11);
                     
-                    //TODO: call UI method, class of that method required 
-                    _UIthread.displayIncomingCall(username, ipAddress);
+                    String ipAddress = br.readLine();
+                    ipAddress = ipAddress.substring(11, ipAddress.length() - 12);
+                    
+                    Message msg = new Message();
+                    msg.what = 1;
+                    msg.obj = new String[] { username, ipAddress };
+                    
+                    _UIthread.sendMessage(msg);
                 }
-                
-                // Hang up request
-                else if (line.startsWith("<Hangup>"))
+            	else if (line.startsWith("<Hangup>"))
                 {
-                    //TODO: call UI method, class of that method required 
-                	_UIthread.displayHangup();
+                	Message msg = new Message();
+                    msg.what = 2;
+                    
+                    _UIthread.sendMessage(msg);                  
                 }
-                
-                // Busy request
                 else if (line.startsWith("<Busy>"))
                 {
-                    //TODO: call UI method, class of that method required 
-                	_UIthread.displayBusy();
+                	Message msg = new Message();
+                    msg.what = 3;
+                    
+                    _UIthread.sendMessage(msg);
                 }
-                
                 else if (line.startsWith("<Directory>"))
                 {
                     ArrayList<User> users = new ArrayList<User>();
@@ -71,15 +79,31 @@ public class DirectoryClientListener implements Runnable
 
                             String status = br.readLine();
                             status = status.substring(8, status.length() - 9);
+                            
                             User u = new User(username, ipAddress);
                             u.setStatus(status);
-
+                           
                             users.add(u);                            
                         }
                     }                    
                     
-                    _UIthread.updateDirectory(users);
+                    Message msg = new Message();
+                    msg.what = 0;
+                    msg.obj = users;
+                    
+                    _UIthread.sendMessage(msg);
                 }
+                else if (line.startsWith("<Connect>"))
+                {
+                    String ipAddress = br.readLine();
+                    ipAddress = ipAddress.substring(11, ipAddress.length() - 12);
+                    
+                    Message msg = new Message();
+                    msg.what = 4;
+                    msg.obj = ipAddress;
+                    
+                    _UIthread.sendMessage(msg);
+                }                    
             }
             
             br.close();
@@ -88,6 +112,8 @@ public class DirectoryClientListener implements Runnable
         catch (Exception ex)
         {
             // TODO: handle exception
+        	System.out.println(ex.getMessage());
         }
     }
 }
+
