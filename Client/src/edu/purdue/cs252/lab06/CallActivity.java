@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,7 +23,7 @@ import android.widget.TextView;
 
 public class CallActivity extends Activity
 {
-	Handler UIhandler;
+	public static Handler UIhandler;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState)
@@ -61,6 +62,11 @@ public class CallActivity extends Activity
         
         setupHandler();
         
+        
+        /*IntentFilter filter = new IntentFilter();
+        filter.addAction("hangup.the.fucking.phone");
+        registerReceiver(cr, filter);*/
+        
         // socket is available at `DirectoryClient._socket;`
     }
 	
@@ -75,6 +81,13 @@ public class CallActivity extends Activity
     			}
     		}
     	};
+    	
+    	Log.i("CallActivity", this.toString());
+    	CallReceiver cr = new CallReceiver(UIhandler);
+    	
+    	/*IntentFilter filter = new IntentFilter();
+        filter.addAction("hangup.the.fucking.phone");
+        registerReceiver(cr, filter);*/
     }
 	
 	public void displayHangup()
