@@ -25,6 +25,10 @@ public class CallActivity extends Activity
 {
 	public static Handler UIhandler;
 	
+	String username;
+	String userAddress;
+	String serverAddress;
+	
 	@Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -32,9 +36,9 @@ public class CallActivity extends Activity
         setContentView(R.layout.call);
         
         Bundle extras = getIntent().getExtras();
-        String username = extras.getString("username");
-        final String userAddress = extras.getString("userAddress");
-        String serverAddress = extras.getString("serverAddress");
+        username = extras.getString("username");
+        userAddress = extras.getString("userAddress");
+        serverAddress = extras.getString("serverAddress");
         
         Button btn = null;
         btn = (Button) findViewById(R.id.widget33); 
@@ -60,15 +64,27 @@ public class CallActivity extends Activity
         tV = (TextView) findViewById(R.id.callerName); 
         tV.setText(username);
         
-        setupHandler();
-        
+        setupHandler();        
         
         /*IntentFilter filter = new IntentFilter();
         filter.addAction("hangup.the.fucking.phone");
         registerReceiver(cr, filter);*/
         
         // socket is available at `DirectoryClient._socket;`
+        
+        beginCall();
     }
+	
+	public void beginCall()
+	{
+		VoiceRecorder vr = new VoiceRecorder(serverAddress);
+    	Thread t1 = new Thread(vr);  
+    	t1.start();
+    	
+    	VoicePlayer vp = new VoicePlayer(serverAddress);
+		Thread t2 = new Thread(vp);  
+		t2.start();
+	}
 	
 	public void setupHandler()
     {
