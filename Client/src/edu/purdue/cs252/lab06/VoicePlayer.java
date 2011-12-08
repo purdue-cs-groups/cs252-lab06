@@ -11,6 +11,8 @@ import android.util.Log;
 
 public class VoicePlayer implements Runnable
 {	
+	private int BUFFER_SIZE = 768;
+	
 	private int sampleRate = 8000;
 	private int channelConfig = AudioFormat.CHANNEL_CONFIGURATION_MONO;
 	private int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
@@ -47,7 +49,7 @@ public class VoicePlayer implements Runnable
 		speaker = new AudioTrack(AudioManager.STREAM_VOICE_CALL, sampleRate, channelConfig, audioFormat, minBuf, AudioTrack.MODE_STREAM);
 		speaker.play();
 		
-		byte[] buffer = new byte[1024];
+		byte[] buffer = new byte[BUFFER_SIZE];
 		DatagramPacket packet;
 		
 		DatagramPacket dummyPacket = null;
@@ -81,14 +83,25 @@ public class VoicePlayer implements Runnable
 				// TODO: handle this exception
 			}
 		}
+		
+		buffer = null;
 	}
 	
 	public void close()
 	{
 		playAudio = false;
 		
-		speaker.stop();
-		speaker.release();
+		try 
+		{
+			speaker.stop();
+			speaker.release();
+			
+			speaker = null;
+		}
+		catch (Exception ex)
+		{
+			Log.e("VoicePlayer", ex.getMessage());
+		}
 		
 		socket.close();
 	}

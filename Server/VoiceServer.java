@@ -4,6 +4,8 @@ import java.net.*;
 
 public class VoiceServer implements Runnable
 {
+    private int BUFFER_SIZE = 768;
+    
     private int _port = 0;
     ArrayList<VoiceServerConnection> _connections = null;
     
@@ -21,11 +23,11 @@ public class VoiceServer implements Runnable
         {
             // create a socket for handling incoming requests
             DatagramSocket serverSocket = new DatagramSocket(_port);
+            byte[] buffer = new byte[BUFFER_SIZE];
             
             while(true)
             {
                 // receive the incoming packet
-                byte[] buffer = new byte[1024];
                 DatagramPacket receivePacket = new DatagramPacket(buffer, buffer.length);
                 serverSocket.receive(receivePacket);
                 

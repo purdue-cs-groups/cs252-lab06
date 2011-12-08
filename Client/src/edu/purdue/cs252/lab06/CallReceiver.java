@@ -39,8 +39,12 @@ public class CallReceiver extends BroadcastReceiver {
 			Message msg = new Message();
 			msg.obj = "finishActivity";
 			msg.what = 2;
-			CallActivity.UIhandler.sendMessage(msg);
-			Log.i("CallReceiver", "Sent the Message");
+			
+			if (CallActivity.UIhandler != null) 
+			{			
+				CallActivity.UIhandler.sendMessage(msg);
+				Log.i("CallReceiver", "Sent the Message");
+			}
 		}
 		
 		return;

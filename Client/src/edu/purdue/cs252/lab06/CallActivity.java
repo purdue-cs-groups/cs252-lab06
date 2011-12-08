@@ -106,19 +106,22 @@ public class CallActivity extends Activity
     }
 	
 	public void displayHangup()
-    {
-    	vr.close();
-    	vp.close();
-    	
+    {		
     	try
     	{
-    		t1.join();
+    		vr.close();
+        	vp.close();
+        	
+        	t1.join();
         	t2.join();
 		}
     	catch (Exception ex)
     	{
 			// TODO: handle this exception
 		}
+    	
+    	vr = null;
+    	vp = null;    	
 		
 		finish();
     }

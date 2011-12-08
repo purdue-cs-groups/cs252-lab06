@@ -11,6 +11,8 @@ import android.util.Log;
 
 public class VoiceRecorder implements Runnable
 {
+	private int BUFFER_SIZE = 768;
+	
 	private int sampleRate = 8000;
 	private int channelConfig = AudioFormat.CHANNEL_CONFIGURATION_MONO;
 	private int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
@@ -43,13 +45,13 @@ public class VoiceRecorder implements Runnable
 	{
 		android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_AUDIO);
 		
-		byte[] buffer = new byte[1024];
+		byte[] buffer = new byte[BUFFER_SIZE];
 		DatagramPacket packet;
 		
 		try
 		{			
 			int minBuf = AudioRecord.getMinBufferSize(sampleRate, channelConfig, audioFormat);
-			recorder = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channelConfig, audioFormat,minBuf); 
+			recorder = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channelConfig, audioFormat, minBuf); 
 			recorder.startRecording();
 		}
 		catch (Exception ex)
@@ -63,7 +65,7 @@ public class VoiceRecorder implements Runnable
 			{
 				recorder.read(buffer, 0, buffer.length);
 				
-				packet = new DatagramPacket(buffer,buffer.length,InetAddress.getByName(_server), _port);	
+				packet = new DatagramPacket(buffer, buffer.length, InetAddress.getByName(_server), _port);	
 				socket.send(packet);
 			}
 			catch (Exception ex)
@@ -71,14 +73,23 @@ public class VoiceRecorder implements Runnable
 				// TODO: handle this exception					
 			}
 		}
+		
+		buffer = null;
 	}
 	
 	public void close()
 	{
 		recordAudio = false;
 		
-		recorder.stop();
-		recorder.release();
+		// try 
+		// {			
+			recorder.stop();
+			recorder.release();
+		// }
+		// catch (Exception ex)
+		// {
+		// 	Log.e("VoiceRecorder", ex.getMessage());
+		// }
 		
 		socket.close();
 	}

@@ -8,11 +8,21 @@ public class DirectoryServer implements Runnable
     ArrayList<User> _directory = null;
     ArrayList<DirectoryServerConnection> _connections = null;
     
-    DirectoryServer(int port)
+    VoiceServer _vs1;
+    VoiceServer _vs2;
+    
+    boolean _viki = false;
+    
+    DirectoryServer(int port, VoiceServer vs1, VoiceServer vs2)
     {
         _port = port;
         _directory = new ArrayList<User>();
         _connections = new ArrayList<DirectoryServerConnection>();
+        
+        _viki = false;
+        
+        _vs1 = vs1;
+        _vs2 = vs2;
     }
 
     public void run()
@@ -43,7 +53,7 @@ public class DirectoryServer implements Runnable
                 th.start();
             }
         }
-        catch (IOException ex)
+        catch (Exception ex)
         {
             // TODO: handle this exception
         }

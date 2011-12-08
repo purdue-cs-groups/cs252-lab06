@@ -246,6 +246,19 @@ public class DirectoryServerConnection implements Runnable
 
             // send updated directory to everyone
             _host.sendUpdatedDirectory();
+            
+            // reset the connections on the VoiceServers
+            if (_host._viki == true)
+            {
+                _host._vs1._connections.clear();
+                _host._vs2._connections.clear();
+                
+                _host._viki = false;
+            }
+            else
+            {
+                _host._viki = true;
+            }
 
             return;
         }

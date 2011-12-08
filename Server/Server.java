@@ -8,11 +8,25 @@ public class Server
     {
         System.out.println("Starting server...");
         
-        // create a new instance of the directory server
-        DirectoryServer ds = new DirectoryServer(7770); 
-		
-        Thread t1 = new Thread(ds);        
+        // create a new instance of the voice server for inbound data
+        VoiceServer vs1 = new VoiceServer(7771);
+        
+        Thread t1 = new Thread(vs1);        
         t1.start();
+        
+        // create a new instance of the voice server for outbound data
+        VoiceServer vs2 = new VoiceServer(7772);
+        
+        Thread t2 = new Thread(vs2);        
+        t2.start();
+        
+        
+        
+        // create a new instance of the directory server
+        DirectoryServer ds = new DirectoryServer(7770, vs1, vs2); 
+		
+        Thread t3 = new Thread(ds);        
+        t3.start();
 
         // create a new instance of the heartbeat monitor
         if ((args.length > 0 && args[0].equals("--disable-keep-alive") == false) ||
@@ -20,21 +34,9 @@ public class Server
         {
             HeartbeatMonitor hm = new HeartbeatMonitor(ds);
             
-            Thread t3 = new Thread(hm);
-            t3.start();
+            Thread t4 = new Thread(hm);
+            t4.start();
         }
-                
-        // create a new instance of the voice server for inbound data
-        VoiceServer vs1 = new VoiceServer(7771);
-        
-        Thread t2 = new Thread(vs1);        
-        t2.start();
-        
-        // create a new instance of the voice server for outbound data
-        VoiceServer vs2 = new VoiceServer(7772);
-        
-        Thread t3 = new Thread(vs2);        
-        t3.start();
     }
 }
 
