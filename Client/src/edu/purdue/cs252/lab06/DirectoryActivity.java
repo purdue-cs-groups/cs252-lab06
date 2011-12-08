@@ -186,7 +186,13 @@ public class DirectoryActivity extends ListActivity
 			   
 			adb.setTitle("Error");
 			adb.setMessage(ex.getMessage());
-			adb.setPositiveButton("OK", null);
+			adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which)
+				{
+					finish();
+		        }
+			});
+			
 			adb.show();
         }
         
