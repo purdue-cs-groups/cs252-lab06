@@ -74,7 +74,7 @@ public class VoiceServer implements Runnable
                 }
             }
         }
-        catch (IOException ex)
+        catch (Exception ex)
         {
             // TODO: handle this exception
         }

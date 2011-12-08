@@ -250,8 +250,11 @@ public class DirectoryServerConnection implements Runnable
             // reset the connections on the VoiceServers
             if (_host._viki == true)
             {
-                _host._vs1._connections.clear();
-                _host._vs2._connections.clear();
+                _host._vs1._connections = null;
+                _host._vs2._connections = null;
+                
+                _host._vs1._connections = new ArrayList<VoiceServerConnection>();
+                _host._vs2._connections = new ArrayList<VoiceServerConnection>();
                 
                 _host._viki = false;
             }
