@@ -2,7 +2,6 @@ package edu.purdue.cs252.lab06;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
@@ -26,7 +25,7 @@ import android.widget.ListView;
 
 public class DirectoryActivity extends ListActivity 
 {
-	boolean onPhone = false;  // CHANGE THIS IF USING EMULATOR
+	boolean onPhone = true;  // CHANGE THIS IF USING EMULATOR
 	MediaPlayer player;
 	
 	String serverAddress;
@@ -147,6 +146,7 @@ public class DirectoryActivity extends ListActivity
 						}
 			        }
 				});
+				
 				adb.setNegativeButton("No", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which)
 					{
@@ -155,6 +155,7 @@ public class DirectoryActivity extends ListActivity
 						// FUCK OFF
 			        }
 				});
+				
 				adb.show();
 			}
         }); 
@@ -220,7 +221,7 @@ public class DirectoryActivity extends ListActivity
     			}
     			else if (msg.what == 4)
     			{
-    				connect((String)msg.obj);
+    				connect(((String[])msg.obj)[0], ((String[])msg.obj)[1]);
     			}
     		}
     	};
@@ -346,7 +347,7 @@ public class DirectoryActivity extends ListActivity
     	}
     }
     
-    public void connect(String ipAddress)
+    public void connect(String readAddress, String writeAddress)
     {    	
     	if (incomingDialog != null)
     	{    	
@@ -370,14 +371,10 @@ public class DirectoryActivity extends ListActivity
 		}
     	
     	Intent i = new Intent(DirectoryActivity.this, CallActivity.class);
-		i.putExtra("serverAddress", ipAddress.toString());
 		i.putExtra("username", otherUsername);
-		i.putExtra("myname", username);
 		i.putExtra("userAddress", target.getIPAddress());
-		
-	   	VoicePlayer vp = new VoicePlayer("lore.cs.purdue.edu");
-				Thread t2 = new Thread(vp);  
-				t2.start();
+		i.putExtra("readAddress", readAddress);
+		i.putExtra("writeAddress", writeAddress);
 		
 		startActivity(i);
 

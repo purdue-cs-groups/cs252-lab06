@@ -4,53 +4,82 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
-import android.os.Handler;
 import android.util.Log;
 
-
-public class VoiceRecorder implements Runnable {
+public class VoiceRecorder implements Runnable
+{
 	private int sampleRate = 8000;
 	private int channelConfig = AudioFormat.CHANNEL_CONFIGURATION_MONO;
 	private int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
 	private DatagramSocket socket;
-	static boolean onCall = false;
+	AudioRecord recorder;
+	
+	private String _server;
+	private int _port;
+	
+	private boolean recordAudio = true;
 
-	VoiceRecorder(String server) {
-		try {
-			this.socket = new DatagramSocket(7901);
-	 
+	VoiceRecorder(String address)
+	{
+		Log.i("VoiceRecorder", address);
+		
+		try
+		{			
+			_server = address.substring(0, address.length() - 5);
+			_port = Integer.parseInt(address.substring(address.length() - 4, address.length()));
 			
-		} catch (SocketException e) { System.out.println("constructor " + e.getMessage());	}  
+			this.socket = new DatagramSocket(_port);
+		}
+		catch (SocketException e)
+		{
+			// TODO: handle this exception
+		}  
 	}
 	
-	public void run(){
-		try {
-			//android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_URGENT_AUDIO);
-			
-			DatagramPacket packet;
-			int minBuf = AudioRecord.getMinBufferSize(sampleRate,channelConfig,audioFormat);
-			AudioRecord recorder = new AudioRecord(MediaRecorder.AudioSource.MIC,sampleRate,channelConfig,audioFormat,minBuf); 
+	public void run()
+	{
+		android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_AUDIO);
+		
+		byte[] buffer = new byte[1024];
+		DatagramPacket packet;
+		
+		try
+		{			
+			int minBuf = AudioRecord.getMinBufferSize(sampleRate, channelConfig, audioFormat);
+			recorder = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channelConfig, audioFormat,minBuf); 
 			recorder.startRecording();
-			
-			while(true) {
-				try {
-					
-					byte[] buffer = new byte[1024] ;
-					recorder.read(buffer,0,buffer.length);
-					packet = new DatagramPacket(buffer,buffer.length,InetAddress.getByName("lore.cs.purdue.edu"),7901);
-	
-					socket.send(packet);
-				} catch (Exception e) {
-					System.out.println("in voice recorder run() " + e.getMessage());
-					
-				}
-			}
-		} catch (Exception e1) {
-			System.out.println("voice recorder: " + e1.getMessage());
 		}
+		catch (Exception ex)
+		{
+			// TODO: handle this exception
+		}
+		
+		while(recordAudio)
+		{
+			try
+			{
+				recorder.read(buffer, 0, buffer.length);
+				
+				packet = new DatagramPacket(buffer,buffer.length,InetAddress.getByName(_server), _port);	
+				socket.send(packet);
+			}
+			catch (Exception ex)
+			{
+				// TODO: handle this exception					
+			}
+		}
+	}
+	
+	public void close()
+	{
+		recordAudio = false;
+		
+		recorder.stop();
+		recorder.release();
+		
+		socket.close();
 	}
 }

@@ -193,12 +193,14 @@ public class DirectoryServerConnection implements Runnable
 
             PrintWriter outSender = new PrintWriter(_senderSocket.getOutputStream(), true);
             outSender.println("<Connect>");
-            outSender.println("<IpAddress>lore.cs.purdue.edu:6901</IpAddress>");
+            outSender.println("<IpAddress>lore.cs.purdue.edu:7771</IpAddress>");
+            outSender.println("<IpAddress>lore.cs.purdue.edu:7772</IpAddress>");
             outSender.println("</Connect>");
 
             PrintWriter outClient = new PrintWriter(_clientSocket.getOutputStream(), true);
             outClient.println("<Connect>");
-            outClient.println("<IpAddress>lore.cs.purdue.edu:6901</IpAddress>");
+            outClient.println("<IpAddress>lore.cs.purdue.edu:7772</IpAddress>");
+            outClient.println("<IpAddress>lore.cs.purdue.edu:7771</IpAddress>");
             outClient.println("</Connect>");
 
             // set sendee to Busy status

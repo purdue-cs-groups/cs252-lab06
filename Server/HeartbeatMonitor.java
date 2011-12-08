@@ -26,6 +26,8 @@ public class HeartbeatMonitor implements Runnable
             DirectoryServerConnection target = null;
             for (DirectoryServerConnection c : _ds._connections)
             {
+                if (c._user.getStatus().equals("Busy")) continue;
+            
                 timeDiff = currTime - c._lastKeepAliveTime;
 
                 if (timeDiff > _checkTime)

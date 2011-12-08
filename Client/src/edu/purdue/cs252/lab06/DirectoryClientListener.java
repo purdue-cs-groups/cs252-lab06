@@ -3,7 +3,6 @@ package edu.purdue.cs252.lab06;
 import java.util.*;
 import java.net.*;
 import java.io.*;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -35,35 +34,7 @@ public class DirectoryClientListener implements Runnable
             {
             	Log.i("FUCK", line);
             	
-            	if (line.startsWith("<IncomingCall>"))
-                {
-                    String username = br.readLine();
-                    username = username.substring(10, username.length() - 11);
-                    
-                    String ipAddress = br.readLine();
-                    ipAddress = ipAddress.substring(11, ipAddress.length() - 12);
-                    
-                    Message msg = new Message();
-                    msg.what = 1;
-                    msg.obj = new String[] { username, ipAddress };
-                    
-                    _UIthread.sendMessage(msg);
-                }
-            	else if (line.startsWith("<Hangup>"))
-                {
-                	Message msg = new Message();
-                    msg.what = 2;
-                    
-                    _UIthread.sendMessage(msg);                  
-                }
-                else if (line.startsWith("<Busy>"))
-                {
-                	Message msg = new Message();
-                    msg.what = 3;
-                    
-                    _UIthread.sendMessage(msg);
-                }
-                else if (line.startsWith("<Directory>"))
+            	if (line.startsWith("<Directory>"))
                 {
                     ArrayList<User> users = new ArrayList<User>();
                     
@@ -93,17 +64,48 @@ public class DirectoryClientListener implements Runnable
                     
                     _UIthread.sendMessage(msg);
                 }
-                else if (line.startsWith("<Connect>"))
+            	else if (line.startsWith("<IncomingCall>"))
                 {
+                    String username = br.readLine();
+                    username = username.substring(10, username.length() - 11);
+                    
                     String ipAddress = br.readLine();
                     ipAddress = ipAddress.substring(11, ipAddress.length() - 12);
                     
                     Message msg = new Message();
-                    msg.what = 4;
-                    msg.obj = ipAddress;
+                    msg.what = 1;
+                    msg.obj = new String[] { username, ipAddress };
                     
                     _UIthread.sendMessage(msg);
-                }                    
+                }
+            	else if (line.startsWith("<Hangup>"))
+                {
+                	Message msg = new Message();
+                    msg.what = 2;
+                    
+                    _UIthread.sendMessage(msg);                  
+                }
+                else if (line.startsWith("<Busy>"))
+                {
+                	Message msg = new Message();
+                    msg.what = 3;
+                    
+                    _UIthread.sendMessage(msg);
+                }
+                else if (line.startsWith("<Connect>"))
+                {
+                    String readAddress = br.readLine();
+                    readAddress = readAddress.substring(11, readAddress.length() - 12);
+                    
+                    String writeAddress = br.readLine();
+                    writeAddress = writeAddress.substring(11, writeAddress.length() - 12);
+                    
+                    Message msg = new Message();
+                    msg.what = 4;
+                    msg.obj = new String[] { readAddress, writeAddress };
+                    
+                    _UIthread.sendMessage(msg);
+                }
             }
             
             br.close();

@@ -9,7 +9,7 @@ public class Server
         System.out.println("Starting server...");
         
         // create a new instance of the directory server
-        DirectoryServer ds = new DirectoryServer(6900); 
+        DirectoryServer ds = new DirectoryServer(7770); 
 		
         Thread t1 = new Thread(ds);        
         t1.start();
@@ -24,11 +24,17 @@ public class Server
             t3.start();
         }
                 
-        // create a new instance of the voice server
-        VoiceServer vs = new VoiceServer(6901);
+        // create a new instance of the voice server for inbound data
+        VoiceServer vs1 = new VoiceServer(7771);
         
-        Thread t2 = new Thread(vs);        
+        Thread t2 = new Thread(vs1);        
         t2.start();
+        
+        // create a new instance of the voice server for outbound data
+        VoiceServer vs2 = new VoiceServer(7772);
+        
+        Thread t3 = new Thread(vs2);        
+        t3.start();
     }
 }
 

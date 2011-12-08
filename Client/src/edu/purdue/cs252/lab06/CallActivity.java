@@ -1,8 +1,8 @@
 package edu.purdue.cs252.lab06;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
-
 import android.*;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -27,7 +27,14 @@ public class CallActivity extends Activity
 	
 	String username;
 	String userAddress;
-	String serverAddress;
+	String writeAddress;
+	String readAddress;
+	
+	VoiceRecorder vr;
+	VoicePlayer vp;
+	
+	Thread t1;
+	Thread t2;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState)
@@ -35,10 +42,12 @@ public class CallActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.call);
         
+        // extract data from extras
         Bundle extras = getIntent().getExtras();
         username = extras.getString("username");
         userAddress = extras.getString("userAddress");
-        serverAddress = extras.getString("serverAddress");
+        readAddress = extras.getString("readAddress");
+        writeAddress = extras.getString("writeAddress");
         
         Button btn = null;
         btn = (Button) findViewById(R.id.widget33); 
@@ -66,22 +75,18 @@ public class CallActivity extends Activity
         
         setupHandler();        
         
-        /*IntentFilter filter = new IntentFilter();
-        filter.addAction("hangup.the.fucking.phone");
-        registerReceiver(cr, filter);*/
-        
-        // socket is available at `DirectoryClient._socket;`
-        
         beginCall();
     }
 	
 	public void beginCall()
 	{
-		VoiceRecorder vr = new VoiceRecorder(serverAddress);
-    	Thread t1 = new Thread(vr);  
-    	t1.start();
+		vr = new VoiceRecorder(writeAddress);
+		t1 = new Thread(vr);  
+		t1.start();
     	
-
+		vp = new VoicePlayer(readAddress);
+		t2 = new Thread(vp);  
+		t2.start();
 	}
 	
 	public void setupHandler()
@@ -102,6 +107,19 @@ public class CallActivity extends Activity
 	
 	public void displayHangup()
     {
-    	finish();
+    	vr.close();
+    	vp.close();
+    	
+    	try
+    	{
+    		t1.join();
+        	t2.join();
+		}
+    	catch (Exception ex)
+    	{
+			// TODO: handle this exception
+		}
+		
+		finish();
     }
 }
