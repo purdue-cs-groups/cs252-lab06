@@ -18,10 +18,14 @@ public class VoicePlayer implements  Runnable{
 	private int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
 	private DatagramSocket socket;
 	private AudioTrack speaker;
+	private int port;
 	
-	VoicePlayer(String server) {
+	public static boolean play = true; 
+	
+	VoicePlayer(String server, int _port) {
 		try {
-			this.socket = new DatagramSocket(7901);
+			port = _port;
+			this.socket = new DatagramSocket(port);
 
 		} catch (SocketException e) {
 			System.out.printf("Socket Exception!");
@@ -43,9 +47,9 @@ public class VoicePlayer implements  Runnable{
 		}
 		byte[] dummyBuf = new byte[1];
 		dummyBuf[0] = 0;
-		dummyPacket = new DatagramPacket(dummyBuf, dummyBuf.length, serverAddr, 7901);
+		dummyPacket = new DatagramPacket(dummyBuf, dummyBuf.length, serverAddr, port);
 		
-		while(true) {
+		while(play) {
 			try {
 				socket.send(dummyPacket);
 				packet = new DatagramPacket(buffer, buffer.length);
@@ -56,5 +60,9 @@ public class VoicePlayer implements  Runnable{
 			} catch (Exception e) {
 			}
 		}
+		
+		speaker.stop();
+		speaker.release();
+		socket.close();
 	}
 }

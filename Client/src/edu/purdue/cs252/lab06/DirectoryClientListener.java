@@ -95,12 +95,20 @@ public class DirectoryClientListener implements Runnable
                 }
                 else if (line.startsWith("<Connect>"))
                 {
-                    String ipAddress = br.readLine();
-                    ipAddress = ipAddress.substring(11, ipAddress.length() - 12);
+                    String ipAddressWrite = br.readLine();
+                    ipAddressWrite = ipAddressWrite.substring(11, ipAddressWrite.length() - 12);
+                    
+                    String ipAddressRead = br.readLine();
+                    ipAddressRead = ipAddressRead.substring(11, ipAddressRead.length() - 12);
                     
                     Message msg = new Message();
                     msg.what = 4;
-                    msg.obj = ipAddress;
+                    
+                    String[] ips = new String[2];
+                    ips[0] = ipAddressWrite;
+                    ips[1] = ipAddressRead;
+                    
+                    msg.obj = ips;
                     
                     _UIthread.sendMessage(msg);
                 }                    

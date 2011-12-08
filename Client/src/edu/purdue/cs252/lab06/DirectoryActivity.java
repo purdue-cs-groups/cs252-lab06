@@ -26,7 +26,7 @@ import android.widget.ListView;
 
 public class DirectoryActivity extends ListActivity 
 {
-	boolean onPhone = false;  // CHANGE THIS IF USING EMULATOR
+	boolean onPhone = true;  // CHANGE THIS IF USING EMULATOR
 	MediaPlayer player;
 	
 	String serverAddress;
@@ -220,7 +220,9 @@ public class DirectoryActivity extends ListActivity
     			}
     			else if (msg.what == 4)
     			{
-    				connect((String)msg.obj);
+    				String[] ips = new String[2];
+    				ips = (String[])msg.obj;
+    				connect(ips[0], ips[1]);
     			}
     		}
     	};
@@ -346,7 +348,7 @@ public class DirectoryActivity extends ListActivity
     	}
     }
     
-    public void connect(String ipAddress)
+    public void connect(String ipAddressWrite, String ipAddressRead)
     {    	
     	if (incomingDialog != null)
     	{    	
@@ -370,14 +372,15 @@ public class DirectoryActivity extends ListActivity
 		}
     	
     	Intent i = new Intent(DirectoryActivity.this, CallActivity.class);
-		i.putExtra("serverAddress", ipAddress.toString());
+		i.putExtra("writePort", ipAddressWrite.toString());
+		i.putExtra("readPort", ipAddressRead.toString());
 		i.putExtra("username", otherUsername);
 		i.putExtra("myname", username);
 		i.putExtra("userAddress", target.getIPAddress());
 		
-	   	VoicePlayer vp = new VoicePlayer("lore.cs.purdue.edu");
+	   	/*VoicePlayer vp = new VoicePlayer("lore.cs.purdue.edu");
 				Thread t2 = new Thread(vp);  
-				t2.start();
+				t2.start();*/
 		
 		startActivity(i);
 

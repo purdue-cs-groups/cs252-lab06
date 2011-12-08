@@ -18,10 +18,14 @@ public class VoiceRecorder implements Runnable {
 	private int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
 	private DatagramSocket socket;
 	static boolean onCall = false;
+	int port;
+	
+	public static boolean record = true; 
 
-	VoiceRecorder(String server) {
+	VoiceRecorder(String server, int _port) {
 		try {
-			this.socket = new DatagramSocket(7901);
+			port = _port;
+			this.socket = new DatagramSocket(port);
 	 
 			
 		} catch (SocketException e) { System.out.println("constructor " + e.getMessage());	}  
@@ -36,12 +40,12 @@ public class VoiceRecorder implements Runnable {
 			AudioRecord recorder = new AudioRecord(MediaRecorder.AudioSource.MIC,sampleRate,channelConfig,audioFormat,minBuf); 
 			recorder.startRecording();
 			
-			while(true) {
+			while(record) {
 				try {
 					
 					byte[] buffer = new byte[1024] ;
 					recorder.read(buffer,0,buffer.length);
-					packet = new DatagramPacket(buffer,buffer.length,InetAddress.getByName("lore.cs.purdue.edu"),7901);
+					packet = new DatagramPacket(buffer,buffer.length,InetAddress.getByName("lore.cs.purdue.edu"),port);
 	
 					socket.send(packet);
 				} catch (Exception e) {
@@ -49,6 +53,10 @@ public class VoiceRecorder implements Runnable {
 					
 				}
 			}
+			
+			recorder.stop();
+			recorder.release();
+			socket.close();
 		} catch (Exception e1) {
 			System.out.println("voice recorder: " + e1.getMessage());
 		}

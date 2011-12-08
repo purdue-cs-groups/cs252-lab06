@@ -27,7 +27,10 @@ public class CallActivity extends Activity
 	
 	String username;
 	String userAddress;
-	String serverAddress;
+	String writePort;
+	String readPort;
+	
+	Thread t1, t2;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState)
@@ -38,7 +41,17 @@ public class CallActivity extends Activity
         Bundle extras = getIntent().getExtras();
         username = extras.getString("username");
         userAddress = extras.getString("userAddress");
-        serverAddress = extras.getString("serverAddress");
+        writePort = extras.getString("writePort");
+        readPort = extras.getString("readPort");
+        
+        Log.i("CallActivity", "userAddress = " + userAddress);
+        
+        // lore.cs.purdue.edu:xxxx
+        writePort = writePort.substring(19, writePort.length());
+        readPort = readPort.substring(19, readPort.length());
+        
+        Log.i("CallActivity", "writePort = " + writePort);
+        Log.i("CallActivity", "readPort = " + readPort);
         
         Button btn = null;
         btn = (Button) findViewById(R.id.widget33); 
@@ -66,22 +79,18 @@ public class CallActivity extends Activity
         
         setupHandler();        
         
-        /*IntentFilter filter = new IntentFilter();
-        filter.addAction("hangup.the.fucking.phone");
-        registerReceiver(cr, filter);*/
-        
-        // socket is available at `DirectoryClient._socket;`
-        
         beginCall();
     }
 	
 	public void beginCall()
 	{
-		VoiceRecorder vr = new VoiceRecorder(serverAddress);
-    	Thread t1 = new Thread(vr);  
+		VoiceRecorder vr = new VoiceRecorder("lore.cs.purdue.edu", Integer.parseInt(writePort));
+    	t1 = new Thread(vr);  
     	t1.start();
     	
-
+    	VoicePlayer vp = new VoicePlayer("lore.cs.purdue.edu", Integer.parseInt(readPort));
+    	t2 = new Thread(vp);  
+    	t2.start();
 	}
 	
 	public void setupHandler()
@@ -102,6 +111,8 @@ public class CallActivity extends Activity
 	
 	public void displayHangup()
     {
+		VoicePlayer.play = false;
+		VoiceRecorder.record = false; 
     	finish();
     }
 }
