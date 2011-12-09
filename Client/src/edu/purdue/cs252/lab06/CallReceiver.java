@@ -43,7 +43,7 @@ public class CallReceiver extends BroadcastReceiver {
 			if (CallActivity.UIhandler != null) 
 			{			
 				CallActivity.UIhandler.sendMessage(msg);
-				Log.i("CallReceiver", "Sent the Message");
+				Log.i("CallReceiver", "Sent the message to UI.");
 			}
 		}
 		

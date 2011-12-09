@@ -17,7 +17,7 @@ public class VoiceServer implements Runnable
 
     public void run()
     {
-        System.out.println("Voice Server started.");
+        System.out.println("Voice Server started...");
         
         try
         {

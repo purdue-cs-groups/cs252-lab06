@@ -1,12 +1,8 @@
 package edu.purdue.cs252.lab06;
 
-import java.util.*;
 import java.net.*;
 import java.io.*;
 import android.os.Handler;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.util.Log;
 
 public class DirectoryClient
 {    

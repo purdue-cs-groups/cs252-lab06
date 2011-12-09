@@ -80,16 +80,9 @@ public class VoiceRecorder implements Runnable
 	public void close()
 	{
 		recordAudio = false;
-		
-		// try 
-		// {			
-			recorder.stop();
-			recorder.release();
-		// }
-		// catch (Exception ex)
-		// {
-		// 	Log.e("VoiceRecorder", ex.getMessage());
-		// }
+				
+		recorder.stop();
+		recorder.release();
 		
 		socket.close();
 	}

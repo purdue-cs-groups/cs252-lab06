@@ -5,22 +5,18 @@ import java.util.ArrayList;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Parcelable;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 
 public class DirectoryActivity extends ListActivity 
@@ -151,8 +147,6 @@ public class DirectoryActivity extends ListActivity
 					public void onClick(DialogInterface dialog, int which)
 					{
 						CALL_STATUS = 0;
-						
-						// FUCK OFF
 			        }
 				});
 				
@@ -202,7 +196,8 @@ public class DirectoryActivity extends ListActivity
     public void setupHandler()
     {
     	UIhandler = new Handler() {    		
-    		public void handleMessage(Message msg)
+    		@SuppressWarnings("unchecked")
+			public void handleMessage(Message msg)
     		{
     			if (msg.what == 0)
     			{
@@ -214,7 +209,7 @@ public class DirectoryActivity extends ListActivity
     			}
     			else if (msg.what == 2)
     			{
-    				Log.i("DirectoryActivity", "Got the hangup");
+    				Log.i("DirectoryActivity", "Got the hangup.");
     				
     				// send intent
     				sendBroadcast();
@@ -237,7 +232,7 @@ public class DirectoryActivity extends ListActivity
     	Intent i = new Intent();
         i.setAction("hangup.the.phone");
         sendBroadcast(i);
-        Log.i("DirectoryActivity", "Sent the Intent");
+        Log.i("DirectoryActivity", "Sent the Intent for CallReceiver to catch.");
     }
     
     public void updateDirectory(ArrayList<User> directory)
@@ -253,8 +248,7 @@ public class DirectoryActivity extends ListActivity
 		
 		database.notifyDataSetChanged();
     }
-    
-    //private String senderIP = null;
+
     public void displayIncomingCall(String userName, String ipAddress)
     {
     	CALL_STATUS = 2;

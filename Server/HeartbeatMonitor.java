@@ -26,6 +26,7 @@ public class HeartbeatMonitor implements Runnable
             DirectoryServerConnection target = null;
             for (DirectoryServerConnection c : _ds._connections)
             {
+				System.out.println("");
                 if (c._user.getStatus().equals("Busy")) continue;
             
                 timeDiff = currTime - c._lastKeepAliveTime;
@@ -49,12 +50,12 @@ public class HeartbeatMonitor implements Runnable
                         // TODO: handle this exception            
                     }
                     
-                    System.out.println(c.getIPAddress() + " needs to die.");
+                    System.out.println(c._user.getUsername() + " has been removed from the directory.");
                 }
                 else
                 {
                     // connection is active
-                    System.out.println(c.getIPAddress() + " can live.");
+                    System.out.println(c._user.getUsername() + " can remain in the directory.");
                 }
             }
             

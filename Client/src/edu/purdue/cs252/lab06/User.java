@@ -1,5 +1,4 @@
 package edu.purdue.cs252.lab06;
-import java.util.*;
 
 public class User
 {
